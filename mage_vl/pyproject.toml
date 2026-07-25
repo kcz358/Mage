@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "mage-vl"
 version = "0.2.0"
-description = "Inference scripts for Mage-VL-Base, Mage-VL-NVC, and Mage-VL-Streaming"
+description = "Inference scripts for Mage-VL-Base"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -30,4 +30,4 @@ dependencies = [
 ]
 
 [tool.setuptools]
-py-modules = ["demo", "inference_base", "inference_streaming"]
+py-modules = ["inference_base", "inference_streaming"]

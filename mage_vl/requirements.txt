@@ -1,4 +1,4 @@
-# Mage-VL Base, NVC, and Streaming inference dependencies.
+# Mage-VL-Base inference dependencies, covering codec and streaming paths.
 # Install PyTorch for your CUDA version first when the default wheel is unsuitable.
 
 torch>=2.9

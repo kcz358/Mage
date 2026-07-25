@@ -1,16 +1,21 @@
 # Mage-VL Inference
 
-Inference entry points for the Mage-VL model family.
+<p align="center">
+  <img src="assets/mage-vl-cover.png" alt="Mage-VL" width="100%">
+</p>
 
-| Model | Purpose | Script | Checkpoint |
-|---|---|---|---|
-| Mage-VL-Base | Image understanding | `inference_base.py` | `Mage-VL/Mage-VL-Base` |
-| Mage-VL-NVC | Neural/traditional codec video understanding | `demo.py` | `Mage-VL/Mage-VL-NVC` |
-| Mage-VL-Streaming | Event-gated continuous video commentary | `inference_streaming.py` | `Mage-VL/Mage-VL-Streaming` |
+A single checkpoint, `Mage-VL/Mage-VL-Base`, covers every Mage-VL capability:
+image understanding, frame-sampled video, traditional H.264/HEVC codec video,
+neural DCVC-RT codec video, and event-gated streaming. The model repository
+bundles the codec processor, the neural codec package, and the StreamMind gate
+weights, so no separate NVC or Streaming checkpoint is required.
+
+| Capability | Script | Entry point |
+|---|---|---|
+| Image, frames, traditional codec, neural codec | `inference_base.py` | offline and SGLang online |
+| Event-gated continuous video commentary | `inference_streaming.py` | offline |
 
 ## Installation
-
-Install all Base, NVC, and Streaming dependencies:
 
 ```bash
 pip install -r mage_vl/requirements.txt
@@ -18,12 +23,12 @@ pip install -r mage_vl/requirements.txt
 
 Codec-based video inference requires `ffmpeg` and `ffprobe` on `PATH`. The
 traditional codec path uses the `cv-preinfer` command supplied by
-`codec-video-prep`; the Streaming frames backend uses Decord directly.
+`codec-video-prep`; the streaming frames backend uses Decord directly.
 
-## Mage-VL-Base
+## Offline inference
 
-Offline mode loads `AutoModelForCausalLM.from_pretrained` directly. It supports
-images, 32-frame video sampling, and codec video input:
+Offline mode loads `AutoModelForCausalLM.from_pretrained` directly and supports
+images, frame sampling, and both codec engines:
 
 ```bash
 python mage_vl/inference_base.py \
@@ -55,7 +60,9 @@ python mage_vl/inference_base.py \
   --question "Describe this video."
 ```
 
-Online mode sends an image or 32 sampled video frames to an OpenAI-compatible
+## Online inference
+
+Online mode sends an image or sampled video frames to an OpenAI-compatible
 SGLang server:
 
 ```bash
@@ -73,7 +80,7 @@ python mage_vl/inference_base.py \
   --base-url http://localhost:30000/v1
 ```
 
-Serve the Base checkpoint with the Mage-VL SGLang branch:
+Serve the checkpoint with the Mage-VL SGLang branch:
 
 ```bash
 git clone -b feat/mage-vl https://github.com/kcz358/sglang
@@ -84,38 +91,17 @@ python -m sglang.launch_server \
   --trust-remote-code
 ```
 
-## Mage-VL-NVC
+## Streaming inference
 
-The NVC model supports neural DCVC-RT and traditional H.264/HEVC patch
-selection. The model repository bundles the neural codec and checkpoints.
-
-```bash
-# Neural codec
-python mage_vl/demo.py \
-  --model Mage-VL/Mage-VL-NVC \
-  --video clip.mp4 \
-  --codec neural \
-  --question "Describe what happens in this video."
-
-# Traditional codec
-python mage_vl/demo.py \
-  --model Mage-VL/Mage-VL-NVC \
-  --video clip.mp4 \
-  --codec traditional
-```
-
-## Mage-VL-Streaming
-
-Streaming inference processes a video causally in non-overlapping windows. The
-event gate remains silent on routine content and generates a caption when a
+Streaming inference processes a video causally in non-overlapping segments. The
+gate stays silent on routine content and generates a caption only when a
 response-worthy event is detected.
 
 ```bash
 python mage_vl/inference_streaming.py \
   --video /path/to/clip.mp4 \
-  --checkpoint Mage-VL/Mage-VL-Streaming \
   --video_backend codec \
-  --segment_sec 30
+  --segment_sec 8
 ```
 
 Use `--video_backend frames` for direct frame sampling. Additional controls
