@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import subprocess
 from pathlib import Path
 
 import torch
@@ -49,6 +50,33 @@ def to_device(inputs: dict, device: str, dtype: torch.dtype) -> dict:
     }
 
 
+def extract_subclip(
+    src_video: str, start: float, duration: float, out_path: Path, timeout: int = 120,
+) -> Path:
+    """Cut [start, start+duration] from src_video without re-encoding."""
+    if out_path.exists() and out_path.stat().st_size > 0:
+        return out_path
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = out_path.with_name(f".tmp_{out_path.name}")
+    # -c copy seeks to the nearest keyframe, which is within this script's tolerance.
+    subprocess.run(
+        [
+            "ffmpeg", "-y", "-loglevel", "error",
+            "-ss", f"{max(0.0, start):.3f}",
+            "-t", f"{duration:.3f}",
+            "-i", str(src_video),
+            "-c", "copy",
+            "-avoid_negative_ts", "make_zero",
+            str(tmp_path),
+        ],
+        check=True,
+        timeout=timeout,
+        capture_output=True,
+    )
+    tmp_path.replace(out_path)
+    return out_path
+
+
 def build_segment_inputs(
     processor,
     video_path: str,
@@ -59,8 +87,6 @@ def build_segment_inputs(
     num_frames: int,
     cur_fps: float,
 ) -> dict | None:
-    from ov_train.codec_utils import extract_subclip
-
     duration = end - start
     clip_path = clip_dir / (
         f"{Path(video_path).stem}__t{int(start * 100):08d}__d{int(duration * 100):08d}.mp4"
