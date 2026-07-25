@@ -13,7 +13,9 @@
   &nbsp;
   <a href="https://huggingface.co/collections/microsoft/mage"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Models-yellow" height="22" /></a>
   &nbsp;
-  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-green.svg" height="22" /></a>
+  <a href="LICENSE"><img alt="Mage-Flow License: MIT" src="https://img.shields.io/badge/Mage--Flow%20License-MIT-green.svg" height="22" /></a>
+  &nbsp;
+  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="Mage-VL License: Apache 2.0" src="https://img.shields.io/badge/Mage--VL%20License-Apache%202.0-green.svg" height="22" /></a>
   &nbsp;
   <a href="https://arxiv.org/abs/2607.19064"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-Mage--Flow-b31b1b" height="22" /></a>
 </p>
@@ -34,7 +36,7 @@ The family is organized around a shared **codec-aligned efficiency** philosophy 
 
 | Model | Task | Scale | Code | Report |
 | :--- | :--- | :---: | :--- | :--- |
-| **[Mage-VL](mage_vl/)** | Image & video understanding, proactive streaming | 4B | [`mage_vl/`](mage_vl/README.md) | *Coming Soon* |
+| **[Mage-VL](mage_vl/)** | Image & video understanding, proactive streaming | 4B | [`mage_vl/`](mage_vl/README.md) | [🤗 Model](https://huggingface.co/Mage-VL/Mage-VL) |
 | **[Mage-Flow](mage_flow/)** | Text-to-image generation & instruction-based editing | 4B | [`mage_flow/`](mage_flow/README.md) | [arXiv](https://arxiv.org/abs/2607.19064) |
 
 Both models are compact enough to train, fine-tune, and deploy on modest hardware, yet remain competitive with much larger open systems in their respective domains.
@@ -43,9 +45,15 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 
 ## 🧩 Mage-VL — codec-native streaming vision–language
 
-**Mage-VL** is a codec-native, proactive-streaming multimodal foundation model for image & video understanding, trained **entirely from scratch** at a compact **4B** scale.
+**Mage-VL** is a codec-native, proactive-streaming multimodal foundation model for image & video understanding, trained **entirely from scratch** at a compact **4B** scale. A **single** released checkpoint simultaneously provides image & video understanding **and** the proactive streaming gate — one model, no separate variants.
 
-**🚧 Coming soon** — code, checkpoints, and full details are on the way. Stay tuned.
+**Highlights**
+
+- **Codec-native & from scratch.** The whole visual stack is trained from scratch; the bio-inspired I/P predictive-patch mechanism (`16×16`) cuts visual-token use to **~1/8 or less** of dense frame sampling, enabling **8× longer** video training.
+- **Data-efficient tokenizer.** Mage-ViT trains on only **~100M unlabeled images/videos**, yet matches or beats encoders pretrained on billions of image-text pairs (SigLIP2, MoonViT).
+- **Matched-LLM video gains.** With the 4B Qwen3 backbone fixed, swapping in Mage-ViT beats Qwen3-VL-4B on **every** reported video & temporal-grounding benchmark (e.g. **+22.5** QVHighlight, **+11.0** VSI-Bench).
+- **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the larger **Phi-4-V-R (15B)** across image, video, and spatial benchmarks.
+- **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary and generalizes to real 2026 World Cup broadcasts.
 
 → **[`mage_vl/README.md`](mage_vl/README.md)**
 
@@ -65,16 +73,16 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 
 ## 📣 News
 
+- **2026-07-25** — **Mage-VL** released on 🤗 [Hugging Face](https://huggingface.co/Mage-VL/Mage-VL): a single codec-native 4B checkpoint for image & video understanding **with** a built-in proactive streaming gate.
 - **2026-07-22** — **Mage-Flow** checkpoints released on 🤗 [Hugging Face](https://huggingface.co/collections/microsoft/mage): Base, RL-aligned, and 4-step Turbo variants for both text-to-image generation and image editing.
-- **Coming soon** — **Mage-VL**: a **Base** vision–language model plus a **proactive-streaming** variant for codec-native image & video understanding. Stay tuned.
 
 ## 📥 Model Zoo
 
-**Mage-VL** — vision–language (image & video understanding). 
+**Mage-VL** — vision–language (image & video understanding). A single checkpoint bundles the understanding backbone and the proactive streaming gate.
 
 | Model | Task | Scale | Hugging Face |
 | :--- | :--- | :---: | :--- |
-| `Mage-VL` | image & video understanding, proactive streaming | 4B | 🚧 Coming soon |
+| `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | [🤗 Mage-VL/Mage-VL](https://huggingface.co/Mage-VL/Mage-VL) |
 
 **Mage-Flow** — generation & editing. Each checkpoint is a self-contained diffusers-style repo (`transformer/` + shared `vae/`, `text_encoder/`, `scheduler/`).
 
@@ -97,6 +105,13 @@ Each model is self-contained in its own directory with a dedicated README:
 ## 📝 Citation
 
 ```bibtex
+@article{mage2026magevl,
+  title={Mage-VL: An Efficient Codec-Native Streaming Multimodal Foundation Model},
+  author={Microsoft Mage Team},
+  journal={arXiv preprint},
+  year={2026}
+}
+
 @article{zhang2026mageflow,
   title={Mage-Flow: An Efficient Native-Resolution Foundation Model for Image Generation and Editing},
   author={Zhang, Xinjie and Zhang, Peng and Zheng, Shicheng and Guo, Jinghao and Jia, Zhaoyang and Shen, Yifei and Guo, Xun and Luo, Yuxuan and Li, Jiahao and Xie, Wenxuan and Pu, Fanyi and Zhang, Xiaoyi and Zhang, Kaichen and Guo, Zongyu and Bi, Tianci and Gui, Dongnan and Liu, Zhening and Wen, Zimo and Zheng, Zihan and Yang, Senqiao and Li, Xiao and Wang, Jinglu and Li, Bin and Lu, Yan},
@@ -111,4 +126,9 @@ These models are released for research purposes only and are not intended for pr
 
 ## License
 
-This project is released under the [MIT License](LICENSE).
+Licensing is per-model:
+
+| Model | License |
+| :--- | :--- |
+| **Mage-VL** | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) |
+| **Mage-Flow** | [MIT](LICENSE) |

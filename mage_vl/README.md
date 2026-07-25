@@ -1,31 +1,171 @@
-# Mage-VL Inference
+<h1 align="center">Mage-VL<br><span style="font-size: 0.55em; font-weight: normal;">An Efficient Codec-Native Streaming Multimodal Foundation Model</span></h1>
 
 <p align="center">
-  <img src="assets/mage-vl-cover.png" alt="Mage-VL" width="100%">
+  <a href="https://microsoft.github.io/Mage"><img alt="Project Page" src="https://img.shields.io/badge/%F0%9F%8C%90-Project%20Page-blue" height="22" /></a>
+  <a href="https://github.com/microsoft/Mage"><img src="https://img.shields.io/badge/Code-GitHub-181717?logo=github" alt="GitHub" height="22"></a>
+  <a href="https://huggingface.co/Mage-VL/Mage-VL"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--VL-yellow" height="22" /></a>
+  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-green" alt="License: Apache 2.0" height="22"></a>
 </p>
 
-A single checkpoint, `Mage-VL/Mage-VL-Base`, covers every Mage-VL capability:
-image understanding, frame-sampled video, traditional H.264/HEVC codec video,
-neural DCVC-RT codec video, and event-gated streaming. The model repository
-bundles the codec processor, the neural codec package, and the StreamMind gate
-weights, so no separate NVC or Streaming checkpoint is required.
+<div align="center">
+<img src="assets/mage-vl-cover.png" width="100%" alt="Mage-VL">
+</div>
+
+---
+
+**Mage-VL** is a **codec-native, proactive-streaming multimodal foundation model** for image and video understanding, whose visual perception stack is trained **entirely from scratch** at a compact **4B** scale. Instead of decoding video into uniformly-sampled frames and pushing a dense grid of patch tokens through a frozen web-pretrained ViT, Mage-VL follows the structure of modern video codecs: it separates a stream into **anchor (I) frames** and **predicted (P) frames**, keeps every anchor patch, and retains only the predicted-frame patches where the codec spends bits — the regions carrying real motion and new detail.
+
+The system is built from **two jointly designed components**:
+
+- **Mage-ViT** — a from-scratch *Codec-ViT* visual tokenizer that allocates tokens by codec-derived spatio-temporal importance, on a shared `16×16` patch grid with 3D rotary position encoding. It is **codec-agnostic**: the same interface accepts a traditional codec (H.264/AVC, HEVC/H.265) via motion vectors + residual energy, or a neural codec (DCVC-RT) via its learned rate map — no architecture or retraining change.
+- **Qwen3-4B causal decoder** — a Qwen3-4B-Instruct-2507 language backbone that consumes Mage-ViT's variable-length token stream through a lightweight two-layer MLP projector, with a unified interface for images, short/long/ultra-long video, and streaming.
+
+On top of this pair, a **System 1 & System 2 dual-process design** adds proactive streaming inside a single model: a lightweight **cognition gate** (System 1) watches each rolling codec window and stays silent on routine content, invoking the full VLM (System 2) only when a response-worthy event completes — no multi-agent pipeline required.
+
+## ✨ Highlights
+
+- **Codec-native & from scratch.** The entire visual stack is trained from scratch — no billion-scale image-text ViT initialization. The bio-inspired predictive-patch mechanism (I/P frames at `16×16`) cuts visual-token consumption to **~1/8 or less** of dense frame sampling, letting the model train on videos **8× longer** under the same budget.
+- **Data-efficient tokenizer.** Trained on only **~100M unlabeled images/videos**, Mage-ViT matches or beats frontier encoders trained on billions of image-text pairs (SigLIP2 @ 10B, MoonViT @ 2B) — e.g. **99.33% on CIFAR-10** and **85.69% on ImageNet** with 256 tokens, showing web-scale pretraining is *not* essential for a strong VLM front-end.
+- **Native-resolution scaling.** Variable-resolution pretraining lets Mage-ViT improve *monotonically* with the token budget (peaking **>96.1% Food-101 / >86.3% ImageNet** at 676 tokens) where fixed-resolution encoders saturate or degrade.
+- **Matched-LLM video gains.** With the 4B Qwen3 backbone held fixed and only the ViT swapped, Mage-VL improves over Qwen3-VL-4B on **every** reported video and temporal-grounding benchmark — largest on localization-heavy tasks (**+22.5 QVHighlight**, +17.1 ActivityNet, +11.0 VSI-Bench, +24.5 VideoEval-Pro).
+- **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the much larger **Phi-4-V-R (15B)** across image, video, and spatial benchmarks at ~1/4 the parameters.
+- **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary; it tops **TimVal / F1 / ROC-AUC / PR-AUC** on SoccerNet streaming and generalizes to real 2026 World Cup broadcasts.
+
+## 📥 Model
+
+A **single checkpoint**, `Mage-VL/Mage-VL`, is one unified model that **simultaneously** provides image & video understanding **and** the proactive streaming gate — the same weights answer offline image/video questions and drive event-gated commentary. It covers every Mage-VL capability: image understanding, frame-sampled video, traditional H.264/HEVC codec video, neural DCVC-RT codec video, and event-gated streaming. The repository bundles the codec processor, the neural codec package, and the proactive gate weights — no separate understanding, NVC, or streaming checkpoint is required.
+
+| Model | Task | Scale | Backbone | Hugging Face |
+| :--- | :--- | :---: | :--- | :--- |
+| `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | Mage-ViT + Qwen3-4B-Instruct-2507 | [🤗 Mage-VL/Mage-VL](https://huggingface.co/Mage-VL/Mage-VL) |
+
+## 🏗️ Architecture
+
+**Mage-ViT** — a Codec-ViT: a codec-driven patchifier followed by a 24-layer pre-norm ViT (hidden `1024`, 16 heads, `4×` GELU MLP, FlashAttention-2) with a shared 3D RoPE over the *un-pruned* grid. For a 64-frame clip it keeps all I-frame patches and the top-`k` P-frame patches within a `4096`-token budget (~75% reduction). Three patchification modes share one trunk: **codec** (dense anchor + sparse predicted), **chunk-wise** (one frame per temporal chunk), and **collage/single-image spatial**. It is pretrained from scratch in two stages (variable-resolution image → joint image+video) with a **cluster-discrimination** objective over MetaCLIP-feature prototypes.
+
+**Mage-VL** — a unified model where projected visual tokens and text tokens share one causal Qwen3 decoder. Still images become a single spatial block; videos become temporally-ordered codec windows. In **streaming** mode, a lightweight gate head predicts `p_speak = g(h_t)` per rolling window and triggers generation when `p_speak ≥ τ`; the causal KV cache is reused so history is never reprocessed, and a text query can be injected at any time.
+
+**Training** — a progressive multi-stage supervised curriculum with no preference/RL post-training:
+
+1. **Caption-centric warm-up** — ~350M dense image captions + 4.2M short-video captions.
+2. **Instruction grafting** — ~54M image-instruction samples + 3.4M 30–180s video captions.
+3. **Temporal-horizon expansion** — medium/long video (LLaVA-Video, TimeLens, VideoChat-Flash, Molmo2) with retained image SFT.
+4. **Codec-native long-context adaptation** — 350K long videos as rolling codec windows (up to 384/768 frames), establishing the image & video understanding backbone.
+5. **Proactive streaming alignment** — a cognition gate fine-tuned on ~3.35M streaming samples with the backbone frozen, adding event-gated response timing on top of the same model.
+
+The two stages produce **one** released checkpoint, **Mage-VL**, that carries both the understanding backbone and the proactive gate — no separate variants are shipped.
+
+Dense recaptioning uses an iterative, agent-in-the-loop **caption-prompt optimization** pipeline (GPT-5 rubric scorer + Copilot refinement + human validation gate), which improves every downstream OCR/doc/chart/perception benchmark and inspired SkillOpt-Lite.
+
+## 📊 Performance
+
+<details>
+<summary><b>Image understanding & spatial intelligence — click to expand</b></summary>
+
+Matched-LLM comparison: Mage-VL and Qwen3-VL-4B share the same 4B Qwen3 backbone and differ only in the visual front-end. `–` = not run. **Bold** = best in row.
+
+| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM (5.6B) | Phi-4-V-R (15B) |
+| :--- | :---: | :---: | :---: | :---: |
+| *Document understanding* | | | | |
+| DocVQA-val | **95.14** | 94.69 | 92.79 | 76.20 |
+| InfoVQA-val | **80.33** | 79.50 | 71.84 | 55.41 |
+| AI2D w/ Mask | **83.16** | 81.54 | 81.83 | 82.87 |
+| ChartQA | **84.88** | 83.96 | 83.76 | 83.40 |
+| OCRBench | **81.80** | 81.60 | 81.70 | 73.90 |
+| MultiDocVQA-val | **87.46** | 87.21 | 46.84 | 58.35 |
+| ChartQAPro | **32.57** | 26.79 | 0.13 | 25.38 |
+| TextVQA-val | 77.28 | **80.55** | 39.93 | 76.06 |
+| CC-OCR Doc | 32.25 | **39.69** | 4.99 | 17.65 |
+| *General VQA* | | | | |
+| MMBench-EN-dev | 84.02 | 83.25 | 65.81 | **84.19** |
+| MMBench-CN-dev | **82.04** | 80.58 | 75.17 | 79.47 |
+| MMStar | **67.32** | 62.04 | 61.24 | 59.63 |
+| MME-Perception | **1709.54** | 1703.50 | 1409.66 | 1590.21 |
+| SeedBench (All) | **76.78** | 75.65 | 68.28 | 73.70 |
+| CV-Bench | **87.79** | 85.37 | 57.09 | 81.31 |
+| MME-RealWorld | **66.52** | 63.20 | 32.45 | 57.80 |
+| *Spatial intelligence* | | | | |
+| CV-Bench-2D | **82.13** | 81.00 | 56.12 | 80.11 |
+| CV-Bench-3D | **94.75** | 92.30 | 56.92 | 82.50 |
+| BLINK | **65.11** | 65.10 | 35.24 | 57.80 |
+| EmbSpatial | **82.67** | 77.50 | 41.51 | 72.67 |
+| CrossPoint | **80.00** | 26.90 | 12.20 | 47.73 |
+| CRPE-Relation | 76.12 | **77.70** | 34.60 | 74.46 |
+| SAT | 67.33 | **69.30** | 55.33 | 66.67 |
+
+</details>
+
+<details>
+<summary><b>Video understanding & temporal grounding — click to expand</b></summary>
+
+Δ = Mage-VL − Qwen3-VL-4B (same backbone). **Bold** = best in row.
+
+| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM | Phi-4-V-R (15B) | Δ |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| *Video QA* | | | | | |
+| MV-Bench | 65.1 | **66.7** | 44.9 | 49.2 | −1.6 |
+| NextQA | **83.1** | 79.8 | 54.1 | 69.0 | +3.3 |
+| VideoMME | **64.0** | 59.7 | 44.7 | 55.3 | +4.3 |
+| LongVideoBench | **61.3** | 57.7 | 41.14 | 51.2 | +3.5 |
+| LVBench | **41.8** | 39.2 | 25.31 | 34.4 | +2.6 |
+| MLVU-dev | **68.7** | 61.5 | 44.18 | 51.8 | +7.2 |
+| VideoEval-Pro | **45.2** | 20.7 | 14.35 | 16.8 | +24.5 |
+| *Temporal grounding* | | | | | |
+| Timelens-Charades | **50.7** | 43.1 | 4.09 | 20.6 | +7.6 |
+| Timelens-ActivityNet | **45.4** | 28.4 | 2.03 | 23.0 | +17.1 |
+| Timelens-QVHighlight | **57.4** | 34.9 | 2.47 | 11.6 | +22.5 |
+| *Spatial reasoning* | | | | | |
+| VSI-Bench | **64.3** | 53.3 | 24.09 | 25.5 | +11.0 |
+| *Tracking (J&F)* | | | | | |
+| Ref-DAVIS17 | **25.83** | 7.48 | 3.14 | 2.15 | +18.35 |
+| MeViS-ValidU | **22.55** | 3.16 | 10.28 | 1.53 | +19.39 |
+| ReasonVOS | **17.76** | 9.66 | 9.50 | 9.77 | +8.10 |
+| Ref-YT-VOS | **25.57** | 5.28 | 8.64 | 3.85 | +20.29 |
+
+The lightweight **tc8** codec setting preserves most of these gains at a fraction of the visual-token cost (e.g. VideoMME 57.9, MLVU-dev 63.2, Timelens-QVHighlight 42.6), and is the fastest of all compared models on most video benchmarks on an 8×B200 node.
+
+</details>
+
+<details>
+<summary><b>Online (OVO-Bench) & proactive streaming (SoccerNet) — click to expand</b></summary>
+
+**OVO-Bench** (online video, 4 recent frames @ 1 fps, no streaming-specific training):
+
+| Model | Real-Time Avg. | Backward Avg. | Overall |
+| :--- | :---: | :---: | :---: |
+| Qwen3-VL-4B (64 frames) | 72.8 | 53.1 | 63.0 |
+| **Mage-VL (4B)** | **79.84** | 48.15 | **64.00** |
+
+**SoccerNet proactive streaming** (StreamMind protocol, codec-native inputs):
+
+| Method | TriggerAcc | TimVal | F1 | ROC-AUC | PR-AUC |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| StreamMind | 52.18 | 47.36 | – | – | – |
+| JoyAI-VL-Interaction | **97.98** | 19.25 | 3.55 | 56.26 | 1.68 |
+| **Mage-VL** | 79.21 | **55.54** | **16.35** | **83.14** | **9.30** |
+
+</details>
+
+## 🚀 Quick Start
+
+A single checkpoint, `Mage-VL/Mage-VL`, covers every capability below. Two entry points:
 
 | Capability | Script | Entry point |
 |---|---|---|
 | Image, frames, traditional codec, neural codec | `inference_base.py` | offline and SGLang online |
 | Event-gated continuous video commentary | `inference_streaming.py` | offline |
 
-## Installation
+### Installation
 
 ```bash
 pip install -r mage_vl/requirements.txt
 ```
 
-Codec-based video inference requires `ffmpeg` and `ffprobe` on `PATH`. The
-traditional codec path uses the `cv-preinfer` command supplied by
-`codec-video-prep`; the streaming frames backend uses Decord directly.
+Codec-based video inference requires `ffmpeg` and `ffprobe` on `PATH`. The traditional codec path uses the `cv-preinfer` command supplied by `codec-video-prep`; the streaming frames backend uses Decord directly.
 
-## Examples
+> **torch / CUDA:** install a PyTorch build matching your CUDA toolkit first when the default wheel is unsuitable, since `flash-attn` and `mamba-ssm` compile CUDA extensions against your installed torch.
+
+### Examples
 
 Two sample inputs ship with the repository:
 
@@ -34,12 +174,14 @@ Two sample inputs ship with the repository:
 | `mage_vl/assets/examples/dog.jpg` | Photo of a dog sitting in front of a patterned rug |
 | `mage_vl/assets/examples/soccer-broadcast.mp4` | 30s, 960x540 football broadcast clip |
 
-## Offline inference
+### Offline inference
 
-Offline mode loads `AutoModelForCausalLM.from_pretrained` directly and supports
-images, frame sampling, and both codec engines:
+### Offline inference
+
+Offline mode loads `AutoModelForCausalLM.from_pretrained` directly and supports images, frame sampling, and both codec engines:
 
 ```bash
+# image
 python mage_vl/inference_base.py \
   --mode offline \
   --image mage_vl/assets/examples/dog.jpg \
@@ -52,6 +194,7 @@ python mage_vl/inference_base.py \
 > attentive expression. [...]
 
 ```bash
+# video — uniform frame sampling
 python mage_vl/inference_base.py \
   --mode offline \
   --video mage_vl/assets/examples/soccer-broadcast.mp4 \
@@ -65,6 +208,7 @@ python mage_vl/inference_base.py \
 > logo on it. The background reveals a large crowd of spectators. [...]
 
 ```bash
+# video — traditional codec (HEVC/H.264)
 python mage_vl/inference_base.py \
   --mode offline \
   --video mage_vl/assets/examples/soccer-broadcast.mp4 \
@@ -80,6 +224,7 @@ python mage_vl/inference_base.py \
 > the match. [...]
 
 ```bash
+# video — neural codec (DCVC-RT)
 python mage_vl/inference_base.py \
   --mode offline \
   --video mage_vl/assets/examples/soccer-broadcast.mp4 \
@@ -93,10 +238,9 @@ python mage_vl/inference_base.py \
 > stadium filled with spectators. The presenter, dressed in a black shirt, holds
 > a yellow BBC Sport microphone and wears a black earpiece. [...]
 
-## Online inference
+### Online inference
 
-Online mode sends an image or sampled video frames to an OpenAI-compatible
-SGLang server:
+Online mode sends an image or sampled video frames to an OpenAI-compatible SGLang server:
 
 ```bash
 python mage_vl/inference_base.py \
@@ -120,15 +264,13 @@ git clone -b feat/mage-vl https://github.com/kcz358/sglang
 cd sglang
 pip install -e 'python[all]'
 python -m sglang.launch_server \
-  --model-path Mage-VL/Mage-VL-Base \
+  --model-path Mage-VL/Mage-VL \
   --trust-remote-code
 ```
 
-## Streaming inference
+### Streaming inference
 
-Streaming inference processes a video causally in non-overlapping segments. The
-gate stays silent on routine content and generates a caption only when a
-response-worthy event is detected.
+Streaming inference processes a video causally in non-overlapping segments. The gate stays silent on routine content and generates a caption only when a response-worthy event is detected:
 
 ```bash
 python mage_vl/inference_streaming.py \
@@ -144,7 +286,19 @@ python mage_vl/inference_streaming.py \
 [t=24.0-30.0s] gate=silence (p=0.31)
 ```
 
-The gate is trained on codec inputs, so `--video_backend codec` is the intended
-setting. Use `--video_backend frames` for direct frame sampling. Additional
-controls include `--num_frames`, `--cur_fps`, `--max_segments`,
-`--max_new_tokens`, `--gate_threshold`, and `--attn_impl`.
+The gate is trained on codec inputs, so `--video_backend codec` is the intended setting. Use `--video_backend frames` for direct frame sampling. Additional controls include `--num_frames`, `--cur_fps`, `--max_segments`, `--max_new_tokens`, `--gate_threshold`, and `--attn_impl`.
+
+## 📝 Citation
+
+```bibtex
+@article{mage2026magevl,
+  title={Mage-VL: An Efficient Codec-Native Streaming Multimodal Foundation Model},
+  author={Microsoft Mage Team},
+  journal={arXiv preprint},
+  year={2026}
+}
+```
+
+## 📄 License
+
+Mage-VL is released under the [Apache-2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
