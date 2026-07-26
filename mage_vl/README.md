@@ -31,7 +31,7 @@ On top of this pair, a **System 1 & System 2 dual-process design** adds proactiv
 - **Data-efficient tokenizer.** Trained on only **~100M unlabeled images/videos**, Mage-ViT matches or beats frontier encoders trained on billions of image-text pairs (SigLIP2 @ 10B, MoonViT @ 2B) — e.g. **99.33% on CIFAR-10** and **85.69% on ImageNet** with 256 tokens, showing web-scale pretraining is *not* essential for a strong VLM front-end.
 - **Native-resolution scaling.** Variable-resolution pretraining lets Mage-ViT improve *monotonically* with the token budget (peaking **>96.1% Food-101 / >86.3% ImageNet** at 676 tokens) where fixed-resolution encoders saturate or degrade.
 - **Matched-LLM video gains.** With the 4B Qwen3 backbone held fixed and only the ViT swapped, Mage-VL improves over Qwen3-VL-4B on **every** reported video and temporal-grounding benchmark — largest on localization-heavy tasks (**+22.5 QVHighlight**, +17.1 ActivityNet, +11.0 VSI-Bench, +24.5 VideoEval-Pro).
-- **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the much larger **Phi-4-Reasoning-Vision (15B)** across image, video, and spatial benchmarks at ~1/4 the parameters.
+- **Strong for its size.** On par with Qwen3-VL-4B on static images, and clearly ahead on video understanding and spatial intelligence (**+11.0** VSI-Bench, **+53.1** CrossPoint, **+5.2** EmbSpatial, **+22.5** QVHighlight).
 - **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary; it tops **TimVal / F1 / ROC-AUC / PR-AUC** on SoccerNet streaming and generalizes to real 2026 World Cup broadcasts.
 
 ## 📥 Model
