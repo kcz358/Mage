@@ -16,10 +16,10 @@
 
 **Mage-VL** is a **codec-native, proactive-streaming multimodal foundation model** for image and video understanding, whose visual perception stack is trained **entirely from scratch** at a compact **4B** scale. It targets a modern *Moravec's paradox* of VLMs — strong at complex offline reasoning, yet slow and compute-heavy on simple real-time streaming perception. Instead of decoding video into uniformly-sampled frames and pushing a dense grid of patch tokens through a frozen web-pretrained ViT, Mage-VL follows the structure of modern video codecs: it separates a stream into **anchor (I) frames** and **predicted (P) frames**, keeps every anchor patch, and retains only the predicted-frame patches where the codec spends bits — the regions carrying real motion and new detail. This codec-aligned sparsity cuts visual tokens by **over 75%** while preserving spatio-temporal context, yielding **up to 3.5× wall-clock inference speedup** over uniform frame sampling.
 
-The system is built from **two jointly designed components**:
+The system pairs **two components**:
 
-- **Mage-ViT** — a from-scratch *Codec-ViT* visual tokenizer that allocates tokens by codec-derived spatio-temporal importance, on a shared `16×16` patch grid with 3D rotary position encoding. It is **codec-agnostic**: the same interface accepts a traditional codec (H.264/AVC, HEVC/H.265) via motion vectors + residual energy, or a neural codec (DCVC-RT) via its learned rate map — no architecture or retraining change.
-- **Qwen3-4B causal decoder** — a Qwen3-4B-Instruct-2507 language backbone that consumes Mage-ViT's variable-length token stream through a lightweight two-layer MLP projector, with a unified interface for images, short/long/ultra-long video, and streaming.
+- **Mage-ViT** — a from-scratch *Codec-ViT* visual encoder that allocates tokens by codec-derived spatio-temporal importance, on a shared `16×16` patch grid with 3D rotary position encoding. It is **codec-agnostic**: the same interface accepts a traditional codec (H.264/AVC, HEVC/H.265) via motion vectors + residual energy, or a neural codec (DCVC-RT) via its learned rate map — no architecture or retraining change.
+- **Qwen3-4B causal decoder** — a Qwen3-4B-Instruct-2507 language backbone (the only pretrained component) that consumes Mage-ViT's variable-length token stream through a lightweight two-layer MLP projector, with a unified interface for images, short/long/ultra-long video, and streaming.
 
 On top of this pair, a **System 1 & System 2 dual-process design** adds proactive streaming inside a single model: a lightweight **cognition gate** (System 1) watches each rolling codec window and stays silent on routine content, invoking the full VLM (System 2) only when a response-worthy event completes — no multi-agent pipeline required.
 
@@ -48,21 +48,21 @@ A **single checkpoint**, `microsoft/Mage-VL`, is one unified model that **simult
 <em>Proactive streaming framework — Mage-ViT incrementally encodes the continuous stream into codec-native visual features shared by the event gate and the causal decoder. The gate scores each rolling window and stays silent on routine content; when it opens, the decoder emits an event-conditioned response.</em>
 </div>
 
-**Mage-ViT** — a from-scratch Codec-ViT visual tokenizer. On a `16×16` patch grid it keeps all anchor (I) frame patches and only the motion-salient predicted (P) frame patches, cutting visual tokens by over 75% while a shared 3D RoPE preserves spatio-temporal positions.
+**Mage-ViT** — a from-scratch Codec-ViT visual encoder. On a `16×16` patch grid it keeps all anchor (I) frame patches and only the motion-salient predicted (P) frame patches, cutting visual tokens by over 75% while a shared 3D RoPE preserves spatio-temporal positions.
 
-**Mage-VL** — a unified model where projected visual tokens and text tokens share one causal Qwen3 decoder. Still images become a single spatial block; videos become temporally-ordered codec windows. In **streaming** mode, a lightweight gate head predicts `p_speak = g(h_t)` per rolling window and triggers generation when `p_speak ≥ τ`; the causal KV cache is reused so history is never reprocessed, and a text query can be injected at any time.
+**Mage-VL** — a unified model where projected visual tokens and text tokens share one causal Qwen3 decoder. Still images become a single spatial block; videos become temporally-ordered codec windows. In **streaming** mode, a lightweight **cognition gate** predicts `p_speak = g(h_t)` per rolling window (over a recurrent streaming memory kept by an event-preserving feature extractor) and triggers generation when `p_speak ≥ τ`; the response is decoded by the frozen base model from a local sliding window of the most recent codec segments, and a text query can be injected at any time.
 
-**Training** — a progressive multi-stage supervised curriculum with no preference/RL post-training:
+**Training** — a progressive **five-stage** supervised curriculum (no preference/RL post-training) that produces one unified model:
 
-1. **Caption-centric warm-up** — ~350M dense image captions + 4.2M short-video captions.
-2. **Instruction grafting** — ~54M image-instruction samples + 3.4M 30–180s video captions.
+1. **Multimodal alignment via captions** — ~350M dense image captions + 4.2M short-video captions.
+2. **Instruction tuning + short temporal grounding** — ~54M image-instruction samples + 3.4M 30–180s video captions.
 3. **Temporal-horizon expansion** — medium/long video (LLaVA-Video, TimeLens, VideoChat-Flash, Molmo2) with retained image SFT.
-4. **Codec-native long-context adaptation** — 350K long videos as rolling codec windows (up to 384/768 frames), establishing the image & video understanding backbone.
-5. **Proactive streaming alignment** — a cognition gate fine-tuned on ~3.35M streaming samples with the backbone frozen, adding event-gated response timing on top of the same model.
+4. **Codec-native long-context adaptation** — 350K long videos as rolling codec windows (up to 384/768 frames).
+5. **Proactive streaming alignment** — a cognition gate fine-tuned on ~3.3M streaming samples with the visual encoder and LLM kept frozen (only the gate is trained).
 
-The two stages produce **one** released checkpoint, **Mage-VL**, that carries both the understanding backbone and the proactive gate — no separate variants are shipped.
+The five stages together produce a **single unified model**, `Mage-VL`, that handles image understanding, offline video reasoning, and proactive streaming — no separate variants are shipped.
 
-Dense recaptioning is driven by an **AI4AI data pipeline** — an agentic closed loop where a GPT-5 rubric scorer grades captions and a Copilot coding agent co-designs the prompt and execution code under a human validation gate. It improves every downstream OCR/doc/chart/perception benchmark and inspired SkillOpt-Lite.
+Two parts of the pipeline apply an **AI4AI** (AI-for-AI) paradigm: (1) dense recaptioning runs through an agentic closed loop where a GPT-5 rubric scorer grades captions and a Copilot coding agent co-designs the prompt *and* harness code (e.g. rendering timestamp overlays) under a human validation gate — improving every downstream OCR/doc/chart/perception benchmark and inspiring SkillOpt-Lite; and (2) Stage-3 uses AI-based diagnostics to decide which video categories, resolutions, and frame counts to train on.
 
 ## 📊 Performance
 
