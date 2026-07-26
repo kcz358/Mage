@@ -230,14 +230,14 @@
       <div class="column is-full has-text-centered content">
 
         <p style="max-width:860px;margin:0 auto 1.2rem;color:#555">
-          Mage-VL and <strong>Qwen3-VL-4B</strong> share the same 4B Qwen3 LLM backbone, so the visual tokenizer (dense ViT → <strong>Mage-ViT</strong>) is the <em>only</em> architectural difference — isolating the effect of codec-aligned sparsity. <strong>Phi-4-MM (5.6B)</strong> and <strong>Phi-4-Reasoning-Vision (15B)</strong> are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
+          Mage-VL and <strong>Qwen3-VL-4B</strong> share the same 4B Qwen3 LLM backbone, so the visual tokenizer (dense ViT → <strong>Mage-ViT</strong>) is the <em>only</em> architectural difference — isolating the effect of codec-aligned sparsity. <strong>Phi-4-Multimodal-Instruct</strong> (Phi-4-MM, 5.6B) and <strong>Phi-4-Reasoning-Vision</strong> (Phi-4-R-V, 15B) are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
         </p>
 
         <h2 class="title is-4">Video Understanding &amp; Temporal Grounding</h2>
         <div class="table-container m-2">
           <table class="table is-striped is-hoverable is-fullwidth" id="vid-table">
             <thead>
-              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-Reasoning-Vision-15B</th></tr>
+              <tr><th>Benchmark</th><th>Mage-VL (4B, ours)</th><th>Qwen3-VL (4B)</th><th>Phi-4-MM (5.6B)</th><th>Phi-4-R-V (15B)</th></tr>
             </thead>
             <tbody>
               <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Video QA</td></tr>
@@ -310,7 +310,7 @@
         <div class="table-container m-2">
           <table class="table is-striped is-hoverable is-fullwidth" id="img-table">
             <thead>
-              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-Reasoning-Vision-15B</th></tr>
+              <tr><th>Benchmark</th><th>Mage-VL (4B, ours)</th><th>Qwen3-VL (4B)</th><th>Phi-4-MM (5.6B)</th><th>Phi-4-R-V (15B)</th></tr>
             </thead>
             <tbody>
               <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Document understanding</td></tr>
