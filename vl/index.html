@@ -69,7 +69,7 @@
             </a>
           </figure>
         </div>
-        <p class="caption" style="margin-top:10px">Mage-VL: codec-native visual representations for efficient multimodal understanding — benchmark performance against Qwen3-VL-4B, Phi-4-reasoning-vision-15B and Phi-4-MM-5.6B, and the streaming pipeline from live input to codec-native token selection and online multimodal understanding. Click to expand.</p>
+        <p class="caption" style="margin-top:10px">Mage-VL: codec-native visual representations for efficient multimodal understanding — benchmark performance against Qwen3-VL-4B, Phi-4-Reasoning-Vision-15B and Phi-4-MM-5.6B, and the streaming pipeline from live input to codec-native token selection and online multimodal understanding. Click to expand.</p>
       </div>
     </header>
 
@@ -95,7 +95,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-          Current mainstream Vision-Language Models heavily rely on computationally expensive offline frame sampling and static vision encoders pre-trained on billions of image–text pairs. We present <strong>Mage-VL</strong>, a codec-native, proactive-streaming multimodal foundation model trained entirely <strong>from scratch</strong>. Built on the OneVision Encoder architecture, Mage-VL abandons uniform frame sampling in favor of a bio-inspired predictive patch mechanism that separates video streams into <strong>anchor (I)</strong> and <strong>predicted (P)</strong> frames using 16×16 patch-level compression. To support low-latency interaction, a streamlined <strong>System 1 &amp; System 2</strong> dual-process network enables proactive streaming responses within a single-model agent — no multi-agent pipeline. Our training journey yields critical data-efficiency insights: a custom vision encoder trained on merely <strong>~100M unlabeled video frames</strong> achieves comparable or superior performance to frontier encoders trained on billions of static images. The compact <strong>Mage-VL-4B</strong> performs on par with Qwen3-VL-4B on static-image benchmarks, substantially outperforms it on <strong>video understanding and spatial reasoning</strong>, and comprehensively surpasses the larger Phi-4-V-R (15B) across image, video, and spatial benchmarks. We release model checkpoints and training recipes to the community.
+          Current mainstream Vision-Language Models heavily rely on computationally expensive offline frame sampling and static vision encoders pre-trained on billions of image–text pairs. We present <strong>Mage-VL</strong>, a codec-native, proactive-streaming multimodal foundation model whose visual perception stack is trained entirely <strong>from scratch</strong>. Built on the OneVision Encoder architecture, Mage-VL abandons uniform frame sampling in favor of a bio-inspired predictive patch mechanism that separates video streams into <strong>anchor (I)</strong> and <strong>predicted (P)</strong> frames using 16×16 patch-level compression. To support low-latency interaction, a streamlined <strong>System 1 &amp; System 2</strong> dual-process network enables proactive streaming responses within a single-model agent — no multi-agent pipeline. Our training journey yields critical data-efficiency insights: a custom vision encoder trained on merely <strong>~100M unlabeled images and videos</strong> achieves comparable or superior performance to frontier encoders trained on billions of static images. The compact <strong>Mage-VL-4B</strong> performs on par with Qwen3-VL-4B on static-image benchmarks, substantially outperforms it on <strong>video understanding and spatial reasoning</strong>, and comprehensively surpasses the larger Phi-4-Reasoning-Vision (15B) across image, video, and spatial benchmarks. We release model checkpoints and training recipes to the community.
           </p>
         </div>
       </div>
@@ -143,9 +143,9 @@
 
       <div class="feature-panel" data-color="amber">
         <div class="feature-panel-title">Extreme data efficiency</div>
-        <p class="feature-panel-text">A from-scratch <strong>Mage-ViT</strong> trained on merely <strong>~100M unlabeled video frames</strong> matches or surpasses SigLip2 (10B image–text pairs) and Qwen-ViT (2B) — using <strong>1/100–1/20</strong> of the data. We further show that expanding image-captioning data and exploiting temporal video tokens can substitute massive static images for stronger spatial understanding, emphasizing that data efficiency and architectural alignment can outweigh sheer dataset scale.</p>
+        <p class="feature-panel-text">A from-scratch <strong>Mage-ViT</strong> trained on merely <strong>~100M unlabeled images and videos</strong> matches or surpasses SigLIP2 (10B image–text pairs) and MoonViT (2B) — using <strong>1/100–1/20</strong> of the data. We further show that expanding image-captioning data and exploiting temporal video tokens can substitute massive static images for stronger spatial understanding, emphasizing that data efficiency and architectural alignment can outweigh sheer dataset scale.</p>
         <div class="feature-stats">
-          <div class="feature-stat"><div class="feature-stat-num">~100M</div><div class="feature-stat-lbl">Video frames (Mage-ViT)</div></div>
+          <div class="feature-stat"><div class="feature-stat-num">~100M</div><div class="feature-stat-lbl">Images + videos (Mage-ViT)</div></div>
           <div class="feature-stat"><div class="feature-stat-num">1/100–1/20</div><div class="feature-stat-lbl">Of baseline data</div></div>
           <div class="feature-stat"><div class="feature-stat-num">16×16</div><div class="feature-stat-lbl">Patch grid</div></div>
         </div>
@@ -230,14 +230,14 @@
       <div class="column is-full has-text-centered content">
 
         <p style="max-width:860px;margin:0 auto 1.2rem;color:#555">
-          Mage-VL and <strong>Qwen3-VL-4B</strong> share the same 4B Qwen3 LLM backbone, so the visual tokenizer (dense ViT → <strong>Mage-ViT</strong>) is the <em>only</em> architectural difference — isolating the effect of codec-aligned sparsity. <strong>Phi-4-MM (5.6B)</strong> and <strong>Phi-4-V-R (15B)</strong> are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
+          Mage-VL and <strong>Qwen3-VL-4B</strong> share the same 4B Qwen3 LLM backbone, so the visual tokenizer (dense ViT → <strong>Mage-ViT</strong>) is the <em>only</em> architectural difference — isolating the effect of codec-aligned sparsity. <strong>Phi-4-MM (5.6B)</strong> and <strong>Phi-4-Reasoning-Vision (15B)</strong> are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
         </p>
 
         <h2 class="title is-4">Video Understanding &amp; Temporal Grounding</h2>
         <div class="table-container m-2">
           <table class="table is-striped is-hoverable is-fullwidth" id="vid-table">
             <thead>
-              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-V-R-15B</th></tr>
+              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-Reasoning-Vision-15B</th></tr>
             </thead>
             <tbody>
               <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Video QA</td></tr>
@@ -301,7 +301,7 @@
               <tr><td style='text-align:left'>Streamo-7B</td><td>1 fps</td><td>79.2</td><td>57.8</td><td>75.0</td><td>49.4</td><td>64.4</td><td>70.1</td><td>66.0</td><td>54.6</td><td>52.0</td><td>31.7</td><td>46.1</td><td>56.05</td></tr>
               <tr><td style='text-align:left'>HERMES-7B†</td><td>1 fps</td><td><u>85.2</u></td><td>64.2</td><td>71.6</td><td>53.4</td><td><u>74.3</u></td><td>65.2</td><td>69.0</td><td>48.5</td><td>62.2</td><td><b>37.6</b></td><td>49.4</td><td>59.20</td></tr>
               <tr><td style='text-align:left'>JoyAI-VL-Interaction-9B</td><td>1 fps</td><td>72.5</td><td>61.5</td><td>75.0</td><td>59.0</td><td><b>78.2</b></td><td>64.1</td><td>68.4</td><td>62.0</td><td><b>70.9</b></td><td>12.9</td><td>48.6</td><td>58.50</td></tr>
-              <tr><td style='text-align:left'>Mage-VL-Base (4B, ours)</td><td>1 fps</td><td><b>94.63</b></td><td><b>83.49</b></td><td><b>79.31</b></td><td><b>74.16</b></td><td>70.30</td><td><u>77.17</u></td><td><b>79.84</b></td><td>50.17</td><td>61.49</td><td><u>32.80</u></td><td><u>48.15</u></td><td><b>64.00</b></td></tr>
+              <tr><td style='text-align:left'>Mage-VL (4B, ours)</td><td>1 fps</td><td><b>94.63</b></td><td><b>83.49</b></td><td><b>79.31</b></td><td><b>74.16</b></td><td>70.30</td><td><u>77.17</u></td><td><b>79.84</b></td><td>50.17</td><td>61.49</td><td><u>32.80</u></td><td><u>48.15</u></td><td><b>64.00</b></td></tr>
             </tbody>
           </table>
         </div>
@@ -310,7 +310,7 @@
         <div class="table-container m-2">
           <table class="table is-striped is-hoverable is-fullwidth" id="img-table">
             <thead>
-              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-V-R-15B</th></tr>
+              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-Reasoning-Vision-15B</th></tr>
             </thead>
             <tbody>
               <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Document understanding</td></tr>
