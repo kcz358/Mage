@@ -20,17 +20,15 @@
 The system pairs **two components**:
 
 - **Mage-ViT** — a from-scratch *Codec-ViT* visual encoder that allocates tokens by codec-derived spatio-temporal importance, on a shared `16×16` patch grid with 3D rotary position encoding. It is **codec-agnostic**: the same interface accepts a traditional codec (H.264/AVC, HEVC/H.265) via motion vectors + residual energy, or a neural codec (DCVC-RT) via its learned rate map — no architecture or retraining change.
-- **Qwen3-4B causal decoder** — a Qwen3-4B-Instruct-2507 language backbone (the only pretrained component) that consumes Mage-ViT's variable-length token stream through a lightweight two-layer MLP projector, with a unified interface for images, short/long/ultra-long video, and streaming.
+- **Qwen3-4B causal decoder** — a Qwen3-4B-Instruct-2507 language backbone that consumes Mage-ViT's variable-length token stream through a lightweight two-layer MLP projector, with a unified interface for images, short/long/ultra-long video, and streaming.
 
 On top of this pair, a **System 1 & System 2 dual-process design** adds proactive streaming inside a single model: a lightweight **cognition gate** (System 1) watches each rolling codec window and stays silent on routine content, invoking the full VLM (System 2) only when a response-worthy event completes — no multi-agent pipeline required.
 
 ## ✨ Highlights
 
 - **Codec-native & from scratch.** The entire visual stack is trained from scratch — no billion-scale image-text ViT initialization. The bio-inspired predictive-patch mechanism (I/P frames at `16×16`) cuts visual-token consumption by **over 75%** (**~1/8 or less** of dense frame sampling), letting the model train on videos **8× longer** under the same budget.
-- **Codec-native speedup.** Codec tokenization sets a superior accuracy–efficiency frontier — **up to 3.5× wall-clock inference speedup** over uniform frame sampling at matched accuracy, and the fastest of all compared models on most video benchmarks (single 8×B200 node).
-- **Data-efficient tokenizer.** Trained on only **~100M unlabeled images/videos**, Mage-ViT matches or beats frontier encoders trained on billions of image-text pairs (SigLIP2 @ 10B, MoonViT @ 2B) — e.g. **99.33% on CIFAR-10** and **85.69% on ImageNet** with 256 tokens, showing web-scale pretraining is *not* essential for a strong VLM front-end.
+- **Codec-native speedup.** Codec tokenization sets a superior accuracy–efficiency frontier — **up to 3.5× wall-clock inference speedup** over uniform frame sampling at matched accuracy, and the fastest of all compared models on most video benchmarks.
 - **Native-resolution scaling.** Variable-resolution pretraining lets Mage-ViT improve *monotonically* with the token budget (peaking **>96.1% Food-101 / >86.3% ImageNet** at 676 tokens) where fixed-resolution encoders saturate or degrade.
-- **Matched-LLM video gains.** With the 4B Qwen3 backbone held fixed and only the ViT swapped, Mage-VL improves over Qwen3-VL-4B on **every** reported video and temporal-grounding benchmark — largest on localization-heavy tasks (**+22.5 QVHighlight**, +17.1 ActivityNet, +11.0 VSI-Bench, +24.5 VideoEval-Pro).
 - **Strong for its size.** On par with Qwen3-VL-4B on static images, and clearly ahead on video understanding and spatial intelligence (**+11.0** VSI-Bench, **+53.1** CrossPoint, **+5.2** EmbSpatial, **+22.5** QVHighlight).
 - **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary; it tops **TimVal / F1 / ROC-AUC / PR-AUC** on SoccerNet streaming and generalizes to real 2026 World Cup broadcasts.
 
@@ -148,15 +146,27 @@ Performance comparison across models. Mage-VL-4B and Qwen3-VL-4B use the same 4B
 
 JoyAI's high TriggerAcc comes from predicting silence almost everywhere under SoccerNet's heavy class imbalance, so it collapses on the precision-sensitive metrics; StreamMind is trained *in-distribution* on SoccerNet, whereas Mage-VL is not.
 
-**OVO-Bench** — online video understanding (SimpleStream recent-window protocol, 4 frames @ 1 fps; no streaming-specific fine-tuning). Mage-VL sets a new state-of-the-art overall score **among streaming architectures**. **Bold** = best in column among the models shown.
+**OVO-Bench** — online video understanding (SimpleStream recent-window protocol, 4 frames @ 1 fps; no streaming-specific fine-tuning). Mage-VL sets a new state-of-the-art overall score **among streaming architectures**. RT-Avg / BT-Avg are the Real-Time Visual Perception / Backward Tracing sub-task averages; Overall is their mean. **Bold** = best model per column (Human is the reference upper bound).
 
-| Model | Type | RT-Avg | BT-Avg | Overall |
-| :--- | :--- | :---: | :---: | :---: |
-| Qwen3-VL-4B (64 frames) | offline | 72.8 | **53.1** | 63.0 |
-| StreamForest-7B | streaming | 61.2 | 52.0 | 56.60 |
-| Streamo-7B | streaming | 66.0 | 46.1 | 56.05 |
-| HERMES-7B | streaming | 69.0 | 49.4 | 59.20 |
-| **Mage-VL-4B** | streaming | **79.84** | 48.15 | **64.00** |
+| Model | #Frames | RT-Avg | BT-Avg | Overall |
+| :--- | :---: | :---: | :---: | :---: |
+| Human | – | 93.2 | 92.3 | 92.77 |
+| *Offline video LLMs* | | | | |
+| Qwen2.5-VL-7B | 1 fps | 59.9 | 44.7 | 52.28 |
+| LLaVA-Video-7B | 64 | 63.5 | 40.4 | 51.95 |
+| Qwen3-VL-4B | 64 | 72.8 | **53.1** | 63.00 |
+| *Online / streaming video LLMs* | | | | |
+| VideoLLM-online-8B | 2 fps | 20.8 | 17.7 | 19.26 |
+| Flash-VStream-7B | 1 fps | 28.4 | 27.4 | 27.90 |
+| Dispider-7B | 1 fps | 54.6 | 36.1 | 45.35 |
+| TimeChat-Online-7B | 1 fps | 61.9 | 41.7 | 51.80 |
+| StreamForest-7B | 1 fps | 61.2 | 52.0 | 56.60 |
+| Streamo-7B | 1 fps | 66.0 | 46.1 | 56.05 |
+| HERMES-7B<sup>†</sup> | 1 fps | 69.0 | 49.4 | 59.20 |
+| JoyAI-VL-Interaction-9B | 1 fps | 68.4 | 48.6 | 58.50 |
+| **Mage-VL-4B** | 1 fps | **79.84** | 48.15 | **64.00** |
+
+<sub><sup>†</sup> HERMES = Qwen2.5-VL-7B + HERMES (4K tokens). Baseline results and table structure follow SimpleStream.</sub>
 
 </details>
 
