@@ -42,7 +42,12 @@ A **single checkpoint**, `Mage-VL/Mage-VL`, is one unified model that **simultan
 
 ## 🏗️ Architecture
 
-**Mage-ViT** — a Codec-ViT: a codec-driven patchifier followed by a 24-layer pre-norm ViT (hidden `1024`, 16 heads, `4×` GELU MLP, FlashAttention-2) with a shared 3D RoPE over the *un-pruned* grid. For a 64-frame clip it keeps all I-frame patches and the top-`k` P-frame patches within a `4096`-token budget (~75% reduction). Three patchification modes share one trunk: **codec** (dense anchor + sparse predicted), **chunk-wise** (one frame per temporal chunk), and **collage/single-image spatial**. It is pretrained from scratch in two stages (variable-resolution image → joint image+video) with a **cluster-discrimination** objective over MetaCLIP-feature prototypes.
+<div align="center">
+<img src="assets/mage-vl-framework.png" width="100%" alt="Mage-VL proactive streaming framework"><br>
+<em>Proactive streaming framework — Mage-ViT incrementally encodes the continuous stream into codec-native visual features shared by the event gate and the causal decoder. The gate scores each rolling window and stays silent on routine content; when it opens, the decoder emits an event-conditioned response.</em>
+</div>
+
+**Mage-ViT** — a from-scratch Codec-ViT visual tokenizer. On a `16×16` patch grid it keeps all anchor (I) frame patches and only the motion-salient predicted (P) frame patches, cutting visual tokens by over 75% while a shared 3D RoPE preserves spatio-temporal positions.
 
 **Mage-VL** — a unified model where projected visual tokens and text tokens share one causal Qwen3 decoder. Still images become a single spatial block; videos become temporally-ordered codec windows. In **streaming** mode, a lightweight gate head predicts `p_speak = g(h_t)` per rolling window and triggers generation when `p_speak ≥ τ`; the causal KV cache is reused so history is never reprocessed, and a text query can be injected at any time.
 
