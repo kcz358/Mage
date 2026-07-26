@@ -45,15 +45,16 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 
 ## 🧩 Mage-VL — codec-native streaming vision–language
 
-**Mage-VL** is a codec-native, proactive-streaming multimodal foundation model for image & video understanding, trained **entirely from scratch** at a compact **4B** scale. A **single** released checkpoint simultaneously provides image & video understanding **and** the proactive streaming gate — one model, no separate variants.
+**Mage-VL** is a codec-native, proactive-streaming multimodal foundation model for image & video understanding, trained **entirely from scratch** at a compact **4B** scale. Targeting a modern *Moravec's paradox* of VLMs — strong offline, slow at real-time streaming — it cuts visual tokens by **over 75%** for **up to 3.5× wall-clock inference speedup**. A **single** released checkpoint simultaneously provides image & video understanding **and** the proactive streaming gate — one model, no separate variants.
 
 **Highlights**
 
-- **Codec-native & from scratch.** The whole visual stack is trained from scratch; the bio-inspired I/P predictive-patch mechanism (`16×16`) cuts visual-token use to **~1/8 or less** of dense frame sampling, enabling **8× longer** video training.
+- **Codec-native & from scratch.** The whole visual stack is trained from scratch; the bio-inspired I/P predictive-patch mechanism (`16×16`) cuts visual-token use by **over 75%** (**~1/8 or less** of dense frame sampling), enabling **8× longer** video training and **up to 3.5×** inference speedup.
 - **Data-efficient tokenizer.** Mage-ViT trains on only **~100M unlabeled images/videos**, yet matches or beats encoders pretrained on billions of image-text pairs (SigLIP2, MoonViT).
 - **Matched-LLM video gains.** With the 4B Qwen3 backbone fixed, swapping in Mage-ViT beats Qwen3-VL-4B on **every** reported video & temporal-grounding benchmark (e.g. **+22.5** QVHighlight, **+11.0** VSI-Bench).
 - **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the larger **Phi-4-V-R (15B)** across image, video, and spatial benchmarks.
 - **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary and generalizes to real 2026 World Cup broadcasts.
+- **Seven empirical findings** on data efficiency, resolution scaling, codec acceleration, VideoQA-SFT redundancy, motion–spatial synergy, AI4AI data pipelines, and Zero-Vision SFT for multimodal RL.
 
 → **[`mage_vl/README.md`](mage_vl/README.md)**
 

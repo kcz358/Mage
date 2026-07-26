@@ -13,7 +13,7 @@
 
 ---
 
-**Mage-VL** is a **codec-native, proactive-streaming multimodal foundation model** for image and video understanding, whose visual perception stack is trained **entirely from scratch** at a compact **4B** scale. Instead of decoding video into uniformly-sampled frames and pushing a dense grid of patch tokens through a frozen web-pretrained ViT, Mage-VL follows the structure of modern video codecs: it separates a stream into **anchor (I) frames** and **predicted (P) frames**, keeps every anchor patch, and retains only the predicted-frame patches where the codec spends bits — the regions carrying real motion and new detail.
+**Mage-VL** is a **codec-native, proactive-streaming multimodal foundation model** for image and video understanding, whose visual perception stack is trained **entirely from scratch** at a compact **4B** scale. It targets a modern *Moravec's paradox* of VLMs — strong at complex offline reasoning, yet slow and compute-heavy on simple real-time streaming perception. Instead of decoding video into uniformly-sampled frames and pushing a dense grid of patch tokens through a frozen web-pretrained ViT, Mage-VL follows the structure of modern video codecs: it separates a stream into **anchor (I) frames** and **predicted (P) frames**, keeps every anchor patch, and retains only the predicted-frame patches where the codec spends bits — the regions carrying real motion and new detail. This codec-aligned sparsity cuts visual tokens by **over 75%** while preserving spatio-temporal context, yielding **up to 3.5× wall-clock inference speedup** over uniform frame sampling.
 
 The system is built from **two jointly designed components**:
 
@@ -24,7 +24,8 @@ On top of this pair, a **System 1 & System 2 dual-process design** adds proactiv
 
 ## ✨ Highlights
 
-- **Codec-native & from scratch.** The entire visual stack is trained from scratch — no billion-scale image-text ViT initialization. The bio-inspired predictive-patch mechanism (I/P frames at `16×16`) cuts visual-token consumption to **~1/8 or less** of dense frame sampling, letting the model train on videos **8× longer** under the same budget.
+- **Codec-native & from scratch.** The entire visual stack is trained from scratch — no billion-scale image-text ViT initialization. The bio-inspired predictive-patch mechanism (I/P frames at `16×16`) cuts visual-token consumption by **over 75%** (**~1/8 or less** of dense frame sampling), letting the model train on videos **8× longer** under the same budget.
+- **Codec-native speedup.** Codec tokenization sets a superior accuracy–efficiency frontier — **up to 3.5× wall-clock inference speedup** over uniform frame sampling at matched accuracy, and the fastest of all compared models on most video benchmarks (single 8×B200 node).
 - **Data-efficient tokenizer.** Trained on only **~100M unlabeled images/videos**, Mage-ViT matches or beats frontier encoders trained on billions of image-text pairs (SigLIP2 @ 10B, MoonViT @ 2B) — e.g. **99.33% on CIFAR-10** and **85.69% on ImageNet** with 256 tokens, showing web-scale pretraining is *not* essential for a strong VLM front-end.
 - **Native-resolution scaling.** Variable-resolution pretraining lets Mage-ViT improve *monotonically* with the token budget (peaking **>96.1% Food-101 / >86.3% ImageNet** at 676 tokens) where fixed-resolution encoders saturate or degrade.
 - **Matched-LLM video gains.** With the 4B Qwen3 backbone held fixed and only the ViT swapped, Mage-VL improves over Qwen3-VL-4B on **every** reported video and temporal-grounding benchmark — largest on localization-heavy tasks (**+22.5 QVHighlight**, +17.1 ActivityNet, +11.0 VSI-Bench, +24.5 VideoEval-Pro).
@@ -55,7 +56,7 @@ A **single checkpoint**, `Mage-VL/Mage-VL`, is one unified model that **simultan
 
 The two stages produce **one** released checkpoint, **Mage-VL**, that carries both the understanding backbone and the proactive gate — no separate variants are shipped.
 
-Dense recaptioning uses an iterative, agent-in-the-loop **caption-prompt optimization** pipeline (GPT-5 rubric scorer + Copilot refinement + human validation gate), which improves every downstream OCR/doc/chart/perception benchmark and inspired SkillOpt-Lite.
+Dense recaptioning is driven by an **AI4AI data pipeline** — an agentic closed loop where a GPT-5 rubric scorer grades captions and a Copilot coding agent co-designs the prompt and execution code under a human validation gate. It improves every downstream OCR/doc/chart/perception benchmark and inspired SkillOpt-Lite.
 
 ## 📊 Performance
 
@@ -146,6 +147,18 @@ The lightweight **tc8** codec setting preserves most of these gains at a fractio
 
 </details>
 
+## 🔬 Key Findings
+
+Beyond the model, the report distills **seven empirical findings** for efficient multimodal training:
+
+1. **Web-scale pretraining is not essential.** A from-scratch backbone on ~100M unlabeled frames matches encoders trained on billions of image-text pairs.
+2. **Variable-resolution pretraining scales monotonically.** Quality keeps improving with the visual-token budget instead of saturating/degrading like fixed-resolution encoders.
+3. **Codec-native tokenization sets a better accuracy–efficiency frontier** — up to **3.5× wall-clock inference speedup** over uniform frame sampling.
+4. **Explicit VideoQA SFT is redundant.** Dense video *captions* + standard image SFT are sufficient for strong zero-shot VideoQA.
+5. **Motion–spatial synergy.** Dynamic video training substantially improves static 2D/3D spatial reasoning.
+6. **AI4AI data pipeline.** Agentic closed-loop feedback + prompt/code co-design systematically lift caption quality and downstream scores (inspired SkillOpt-Lite).
+7. **Zero-Vision SFT for multimodal RL.** Bypassing visual SFT in favor of pure-text reasoning SFT unlocks stronger multimodal RL — a compute-efficient path.
+
 ## 🚀 Quick Start
 
 A single checkpoint, `Mage-VL/Mage-VL`, covers every capability below. Two entry points:
@@ -173,8 +186,6 @@ Two sample inputs ship with the repository:
 |---|---|
 | `mage_vl/assets/examples/dog.jpg` | Photo of a dog sitting in front of a patterned rug |
 | `mage_vl/assets/examples/soccer-broadcast.mp4` | 30s, 960x540 football broadcast clip |
-
-### Offline inference
 
 ### Offline inference
 
