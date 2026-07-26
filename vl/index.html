@@ -83,7 +83,7 @@
           <div class="rf-metric"><strong>94.75</strong><span>CV-Bench-3D</span></div>
           <div class="rf-metric"><strong>80.0</strong><span>CrossPoint</span></div>
         </div>
-        <p class="rf-metric-note">Mage-VL and Qwen3-VL-4B share the same 4B Qwen3 LLM backbone, so the visual tokenizer is the only architectural difference. Numbers from the Mage-VL technical report.</p>
+        <p class="rf-metric-note">Numbers from the Mage-VL technical report.</p>
       </div>
     </section>
 
@@ -133,31 +133,30 @@
     <div class="feature-content-wrapper">
 
       <div class="feature-panel" data-color="blue">
-        <div class="feature-panel-title">Codec-native, from scratch</div>
-        <p class="feature-panel-text">Instead of offline uniform frame sampling with a frozen encoder, Mage-VL reads video the way a codec does. Video is split into <strong>anchor (I) frames</strong> (processed fully) and <strong>predicted (P) frames</strong> (only motion-affected patches kept) at a <strong>16×16 patch level</strong>. A single per-patch importance interface accepts signals from <strong>traditional codecs</strong> (H.264/HEVC block bits) and <strong>neural codecs</strong> (DCVC-RT rate map) with no change to architecture, objective, or LLM.</p>
-        <a class="glightbox feature-panel-img" href="static/imgs/framework.png" data-gallery="hl">
-          <img src="static/imgs/framework.png" loading="lazy"/>
+        <div class="feature-panel-title">Codec-native perception</div>
+        <p class="feature-panel-text">Instead of offline uniform frame sampling with a frozen encoder, Mage-VL reads video the way a codec does. Each stream is split into <strong>anchor (I) frames</strong> (kept in full) and <strong>predicted (P) frames</strong> (only motion-salient patches kept) on a <strong>16×16 grid</strong>. A single per-patch importance interface is <strong>codec-agnostic</strong> — it accepts a traditional codec (H.264/HEVC motion + residual) or a neural codec (DCVC-RT rate map) with no change to the encoder — cutting visual tokens by <strong>over 75%</strong> for <strong>up to 3.5× faster</strong> inference.</p>
+        <a class="glightbox feature-panel-img" href="static/imgs/codec_patch.png" data-gallery="hl">
+          <img src="static/imgs/codec_patch.png" loading="lazy"/>
         </a>
-        <p class="feature-panel-cap">Mage-VL architecture: codec front-end (Mage-ViT) → variable-length token stream → Qwen3 LLM.</p>
+        <p class="feature-panel-cap">Codec-driven patch selection: HEVC (motion + residual) or DCVC-RT (entropy) → per-frame significance map → top-k patches packed into canvases for Mage-ViT.</p>
       </div>
 
       <div class="feature-panel" data-color="amber">
-        <div class="feature-panel-title">Extreme data efficiency</div>
-        <p class="feature-panel-text">A from-scratch <strong>Mage-ViT</strong> trained on merely <strong>~100M unlabeled images and videos</strong> matches or surpasses SigLIP2 (10B image–text pairs) and MoonViT (2B) — using <strong>1/100–1/20</strong> of the data. We further show that expanding image-captioning data and exploiting temporal video tokens can substitute massive static images for stronger spatial understanding, emphasizing that data efficiency and architectural alignment can outweigh sheer dataset scale.</p>
-        <div class="feature-stats">
-          <div class="feature-stat"><div class="feature-stat-num">~100M</div><div class="feature-stat-lbl">Images + videos (Mage-ViT)</div></div>
-          <div class="feature-stat"><div class="feature-stat-num">1/100–1/20</div><div class="feature-stat-lbl">Of baseline data</div></div>
-          <div class="feature-stat"><div class="feature-stat-num">16×16</div><div class="feature-stat-lbl">Patch grid</div></div>
-        </div>
+        <div class="feature-panel-title">Data-efficient, from scratch</div>
+        <p class="feature-panel-text">Trained from scratch on merely <strong>~100M unlabeled images and videos</strong>, <strong>Mage-ViT</strong> matches or surpasses frontier encoders trained on billions of image–text pairs — SigLIP2 (10B) and MoonViT (2B) — using <strong>1/100–1/20</strong> of the data. Variable-resolution pre-training lets it scale <strong>monotonically</strong> with the visual-token budget (peaking <strong>&gt;86% on ImageNet</strong> at 676 tokens), whereas fixed-resolution encoders saturate or degrade.</p>
+        <a class="glightbox feature-panel-img" href="static/imgs/vit_scaling.png" data-gallery="hl">
+          <img src="static/imgs/vit_scaling.png" loading="lazy"/>
+        </a>
+        <p class="feature-panel-cap">ImageNet top-1 vs visual-token budget: Mage-ViT keeps improving and stays on top, while SigLIP2 / OV-Encoder peak then degrade and MoonViT lags.</p>
       </div>
 
       <div class="feature-panel" data-color="purple">
         <div class="feature-panel-title">Bio-inspired proactive streaming</div>
-        <p class="feature-panel-text">A single-model <strong>System 1 &amp; System 2</strong> dual-process network gives low-latency, proactive responses to continuous video streams. Early layers act as <strong>System 1</strong> (fast filter — is a response needed now?) and route to deeper <strong>System 2</strong> layers only for complex decisions — no multi-agent pipeline. Temporal annotations are repurposed into sequential interaction boundaries, and the model generalizes to real-world streams (e.g. 2026 World Cup match videos).</p>
-        <a class="glightbox feature-panel-img" href="static/imgs/streaming_data.png" data-gallery="hl">
-          <img src="static/imgs/streaming_data.png" loading="lazy"/>
+        <p class="feature-panel-text">A single-model <strong>System 1 &amp; System 2</strong> design gives low-latency, proactive responses to continuous video. A lightweight <strong>System 1 cognition gate</strong> watches each rolling codec window and decides <em>when</em> to speak; only when an event is response-worthy does it trigger the full <strong>System 2</strong> VLM to generate — no multi-agent pipeline. It stays silent through routine play and speaks the moment an event completes, generalizing to real broadcasts (e.g. 2026 World Cup matches).</p>
+        <a class="glightbox feature-panel-img" href="static/imgs/framework.png" data-gallery="hl">
+          <img src="static/imgs/framework.png" loading="lazy"/>
         </a>
-        <p class="feature-panel-cap">Streaming data construction: temporal annotations → sequential interaction boundaries for proactive responses.</p>
+        <p class="feature-panel-cap">Proactive streaming: Mage-ViT features feed an event gate that stays silent until a response-worthy moment, then triggers the LLM decoder to produce event-conditioned commentary.</p>
       </div>
 
     </div>
@@ -230,7 +229,7 @@
       <div class="column is-full has-text-centered content">
 
         <p style="max-width:860px;margin:0 auto 1.2rem;color:#555">
-          <strong>Mage-VL-4B</strong> and <strong>Qwen3-VL-4B</strong> share the same 4B Qwen3 LLM backbone, so the visual tokenizer (dense ViT → <strong>Mage-ViT</strong>) is the <em>only</em> architectural difference — isolating the effect of codec-aligned sparsity. <strong>Phi-4-Multimodal-Instruct</strong> (Phi-4-MM, 5.6B) and <strong>Phi-4-Reasoning-Vision</strong> (Phi-4-R-V, 15B) are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
+          Performance comparison across models. <strong>Mage-VL-4B</strong> and <strong>Qwen3-VL-4B</strong> use the same 4B Qwen3 LLM backbone; <strong>Phi-4-Multimodal-Instruct</strong> (Phi-4-MM, 5.6B) and <strong>Phi-4-Reasoning-Vision</strong> (Phi-4-R-V, 15B) are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
         </p>
 
         <h2 class="title is-4">Video Understanding &amp; Temporal Grounding</h2>
