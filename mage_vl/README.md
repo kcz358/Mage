@@ -39,10 +39,10 @@ A **single checkpoint**, `microsoft/Mage-VL`, is one unified model that **simult
 
 We additionally release **`microsoft/Mage-ViT`** — the standalone visual encoder from the two-stage, from-scratch ViT pre-training (cluster-discrimination on ~100M unlabeled image/video frames). This is the **ViT-pre-trained checkpoint only**: it has **not** gone through the joint VLM training with the language model. Use it as a data-efficient, codec-native visual encoder or as a drop-in ViT for your own multimodal training.
 
-| Model | Task | Scale | Backbone | Hugging Face |
-| :--- | :--- | :---: | :--- | :--- |
-| `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | Mage-ViT + Qwen3-4B-Instruct-2507 | [🤗 microsoft/Mage-VL](https://huggingface.co/microsoft/Mage-VL) |
-| `Mage-ViT` | codec-native visual encoder — **ViT pre-training only, no VLM joint training** | ~0.3B | ViT-L/16 | [🤗 microsoft/Mage-ViT](https://huggingface.co/microsoft/Mage-ViT) |
+| Model | Task | Backbone | Hugging Face |
+| :--- | :--- | :--- | :--- |
+| `Mage-VL` | image & video understanding **+** proactive streaming gate | Mage-ViT + Qwen3-4B-Instruct-2507 | [🤗 microsoft/Mage-VL](https://huggingface.co/microsoft/Mage-VL) |
+| `Mage-ViT` | codec-native visual encoder — **ViT pre-training only, no VLM joint training** | Codec-ViT (from scratch) | [🤗 microsoft/Mage-ViT](https://huggingface.co/microsoft/Mage-ViT) |
 
 ## 🏗️ Architecture
 
