@@ -143,6 +143,10 @@
           <img src="static/imgs/ai4ai_pipeline.png" loading="lazy"/>
         </a>
         <p class="feature-panel-cap">AI4AI closed loop: frozen Qwen3-VL-32B captions → GPT-5 rubric scorer → Copilot prompt/code modifier → validation gate → improved prompt P<sub>t+1</sub>.</p>
+
+        <p class="feature-panel-text" style="margin-top:14px"><strong>Emergent behavior in video caption pipeline.</strong> During pipeline iteration, the evaluation sub-agent identified that GPT-4.1 struggled with precise temporal localization when relying solely on generic text prompts. To resolve this, the harness code renders sequential timestamp overlays directly onto sampled frames, while the prompt guides the model to anchor events via visual OCR. This code–prompt co-design converts implicit temporal tracking into a visual grounding task, reducing temporal hallucinations and improving caption consistency across long videos.</p>
+
+        <p class="feature-panel-text" style="margin-top:10px"><strong>AI-guided training diagnostics &amp; recipe optimization.</strong> The same AI4AI loop also shaped our training recipe: the evaluation agent surfaced weaknesses in temporal localization — remedied by supplementing high-quality grounding data — and revealed that more frames consistently boost long-video performance, whereas dedicated long-video SFT and resolutions beyond 384 yield only marginal gains. Guided by these findings, we adopt 384-pixel inputs, set Stage-3 temporal length to 384 frames, and raise the RoPE base frequency ($\theta$) to 8M for stable long-context modeling.</p>
       </div>
 
     </div>
@@ -215,7 +219,7 @@
       <div class="column is-full has-text-centered content">
 
         <p style="max-width:860px;margin:0 auto 1.2rem;color:#555">
-          Performance comparison across models. <strong>Mage-VL-4B</strong> and <strong>Qwen3-VL-4B</strong> use the same 4B Qwen3 LLM backbone; <strong>Phi-4-Multimodal-Instruct</strong> (Phi-4-MM, 5.6B) and <strong>Phi-4-Reasoning-Vision</strong> (Phi-4-R-V, 15B) are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
+          Mage-VL-4B <strong>matches Qwen3-VL-4B on general VQA</strong> while <strong>outperforming it on spatial intelligence and video understanding</strong>, and comprehensively surpasses the much larger Phi-4-R-V-15B. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
         </p>
 
         <h2 class="title is-4">Video Understanding &amp; Temporal Grounding</h2>
@@ -340,6 +344,12 @@
           </table>
         </div>
         <p style="font-size:.8rem;color:#aaa;margin-top:.5rem">Numbers from the Mage-VL technical report.</p>
+
+        <h2 class="title is-4" style="margin-top:2.5rem">Limitations &amp; Path Forward</h2>
+        <div class="content" style="text-align:left;background:#ffffff;border:1px solid #e5e7eb;border-left:4px solid #e0a800;border-radius:10px;padding:1.1rem 1.4rem;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+          <p style="margin-bottom:.7rem">⚠️ Despite its strong perception and streaming capabilities, Mage-VL still shows a gap to Qwen3-VL on complex <strong>agentic</strong> tasks. This gap largely stems from tight compute budgets, the absence of joint text-multimodal mixed pre-training, and the omission of large-scale RL post-training.</p>
+          <p style="margin-bottom:0"><strong>💡 Zero-Vision SFT as a promising remedy.</strong> Our preliminary study suggests a compute-efficient path: <em>skip visual SFT entirely</em> and replace it with high-quality pure-text reasoning data before applying multimodal RL. On the LLaVA-OV-1.5 Quick Start scale, this <em>Zero-Vision SFT + RL</em> pipeline lifts overall accuracy by <strong>+5.33%</strong> (54.28 vs. 48.96) across 24 benchmarks, wins on <strong>19/24</strong> tasks, and converges with <strong>50.7% fewer RL steps</strong>. Reasoning (<strong>+7.92%</strong> avg.), OCR &amp; Chart (<strong>+9.52%</strong> avg.), and counting all benefit substantially, indicating that preserving intrinsic textual reasoning during instruction tuning unlocks stronger multimodal RL and offers a practical route to close the agentic gap.</p>
+        </div>
       </div>
     </div>
   </div>
