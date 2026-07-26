@@ -45,7 +45,7 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 
 ---
 
-## 🧩 Mage-VL — codec-native streaming vision–language
+## 🧩 Mage-VL — efficient codec-native proactive streaming understanding
 
 **Mage-VL** is a codec-native, proactive-streaming multimodal foundation model for image & video understanding, whose visual encoder (**Mage-ViT**) is trained **entirely from scratch** and paired with a Qwen3-4B decoder at a compact **4B** scale. Targeting a modern *Moravec's paradox* of VLMs — strong offline, slow at real-time streaming — it cuts visual tokens by **over 75%** for **up to 3.5× wall-clock inference speedup**. A **single** released checkpoint simultaneously provides image & video understanding **and** the proactive streaming gate — one model, no separate variants.
 
