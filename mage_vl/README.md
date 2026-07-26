@@ -43,7 +43,7 @@ We additionally release **`microsoft/Mage-ViT`** — the standalone visual encod
 | Model | Task | Backbone | Hugging Face |
 | :--- | :--- | :--- | :--- |
 | `Mage-VL` | image & video understanding **+** proactive streaming gate | Mage-ViT + Qwen3-4B-Instruct-2507 | [🤗 microsoft/Mage-VL](https://huggingface.co/microsoft/Mage-VL) |
-| `Mage-ViT` | codec-native visual encoder — **ViT pre-training only, no VLM joint training** | Codec-ViT (from scratch) | [🤗 microsoft/Mage-ViT](https://huggingface.co/microsoft/Mage-ViT) |
+| `Mage-ViT` | codec-native visual encoder — ViT pre-training only, no VLM joint training | Codec-ViT (from scratch) | [🤗 microsoft/Mage-ViT](https://huggingface.co/microsoft/Mage-ViT) |
 
 ## 🏗️ Architecture
 
