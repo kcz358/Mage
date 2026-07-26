@@ -138,22 +138,38 @@ The lightweight **tc8** codec setting preserves most of these gains at a fractio
 </details>
 
 <details>
-<summary><b>Online (OVO-Bench) & proactive streaming (SoccerNet) — click to expand</b></summary>
+<summary><b>Proactive streaming (SoccerNet) & online video (OVO-Bench) — click to expand</b></summary>
 
-**OVO-Bench** (online video, 4 recent frames @ 1 fps, no streaming-specific training):
-
-| Model | Real-Time Avg. | Backward Avg. | Overall |
-| :--- | :---: | :---: | :---: |
-| Qwen3-VL-4B (64 frames) | 72.8 | 53.1 | 63.0 |
-| **Mage-VL-4B** | **79.84** | 48.15 | **64.00** |
-
-**SoccerNet proactive streaming** (StreamMind protocol, codec-native inputs):
+**SoccerNet — response timing** (StreamMind protocol, codec-native inputs; zero-tolerance canvas matching). TriggerAcc / TimVal follow each model's protocol; F1 / ROC-AUC / PR-AUC use raw per-position predictions. **Bold** = best in column.
 
 | Method | TriggerAcc | TimVal | F1 | ROC-AUC | PR-AUC |
 | :--- | :---: | :---: | :---: | :---: | :---: |
+| VideoLLM-Online | 31.25 | 28.34 | 0.00 | 54.39 | 0.78 |
+| VideoLLM-MoD | 31.24 | 28.12 | – | – | – |
 | StreamMind | 52.18 | 47.36 | – | – | – |
 | JoyAI-VL-Interaction | **97.98** | 19.25 | 3.55 | 56.26 | 1.68 |
-| **Mage-VL** | 79.21 | **55.54** | **16.35** | **83.14** | **9.30** |
+| **Mage-VL-4B** | 79.21 | **55.54** | **16.35** | **83.14** | **9.30** |
+
+JoyAI's high TriggerAcc comes from predicting silence almost everywhere under SoccerNet's heavy class imbalance, so it collapses on the precision-sensitive metrics; StreamMind is trained *in-distribution* on SoccerNet, whereas Mage-VL is not.
+
+**SoccerNet — response quality** (teacher-forced at annotated boundaries). **Bold** = best in column.
+
+| Method | Fluency ↑ | PPL ↓ | Correctness ↑ |
+| :--- | :---: | :---: | :---: |
+| VideoLLM-Online | 46.35 | 1.79 | 53.50 |
+| VideoLLM-MoD | 45.34 | 1.80 | 53.30 |
+| StreamMind | 70.35 | **1.59** | **89.20** |
+| **Mage-VL-4B** | **83.50** | 2.18 | 84.42 |
+
+**OVO-Bench** — online video understanding (SimpleStream recent-window protocol, 4 frames @ 1 fps; no streaming-specific fine-tuning). Mage-VL sets a new state-of-the-art overall score **among streaming architectures**. **Bold** = best in column.
+
+| Model | Type | RT-Avg | BT-Avg | Overall |
+| :--- | :--- | :---: | :---: | :---: |
+| Qwen3-VL-4B (64 frames) | offline | 72.8 | **53.1** | 63.0 |
+| StreamForest-7B | streaming | 61.2 | 52.0 | 56.60 |
+| Streamo-7B | streaming | 66.0 | 46.1 | 56.05 |
+| HERMES-7B | streaming | 69.0 | 49.4 | 59.20 |
+| **Mage-VL-4B** | streaming | **79.84** | 48.15 | **64.00** |
 
 </details>
 
