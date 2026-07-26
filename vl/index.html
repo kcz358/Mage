@@ -237,7 +237,7 @@
         <div class="table-container m-2">
           <table class="table is-striped is-hoverable is-fullwidth" id="vid-table">
             <thead>
-              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM</th><th>Phi-4-V-R-15B</th></tr>
+              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-V-R-15B</th></tr>
             </thead>
             <tbody>
               <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Video QA</td></tr>
@@ -263,6 +263,45 @@
               <tr><td>MeViS-ValidU</td><td><b>22.55</b></td><td>3.16</td><td><u>10.28</u></td><td>1.53</td></tr>
               <tr><td>ReasonVOS</td><td><b>17.76</b></td><td>9.66</td><td>9.50</td><td><u>9.77</u></td></tr>
               <tr><td>Ref-YT-VOS</td><td><b>25.57</b></td><td><u>5.28</u></td><td>8.64</td><td>3.85</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+
+        <h2 class="title is-4" style="margin-top:2rem">Proactive Streaming on OVO-Bench</h2>
+        <p style="max-width:860px;margin:0 auto .8rem;color:#555;font-size:.9rem">
+          OVO-Bench measures online video understanding under Real-Time Visual Perception and Backward Tracing. <span style="white-space:nowrap">&dagger; Qwen2.5-VL-7B + HERMES (4K tokens).</span> Baseline results and table structure follow SimpleStream.
+        </p>
+        <div class="table-container m-2">
+          <table class="table is-striped is-hoverable is-fullwidth" id="ovo-table">
+            <thead>
+              <tr>
+                <th rowspan="2" style="text-align:left">Model</th><th rowspan="2">#Frames</th>
+                <th colspan="7">Real-Time Visual Perception</th>
+                <th colspan="4">Backward Tracing</th>
+                <th rowspan="2">Avg.</th>
+              </tr>
+              <tr>
+                <th>OCR</th><th>ACR</th><th>ATR</th><th>STU</th><th>FPD</th><th>OJR</th><th>Avg.</th>
+                <th>EPM</th><th>ASI</th><th>HLD</th><th>Avg.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style='text-align:left'>Human</td><td>--</td><td>94.0</td><td>92.6</td><td>94.8</td><td>92.7</td><td>91.1</td><td>94.0</td><td>93.2</td><td>92.6</td><td>93.0</td><td>91.4</td><td>92.3</td><td>92.77</td></tr>
+              <tr><td colspan="14" style="text-align:left;font-style:italic;background:#fafafa">Offline Video LLMs</td></tr>
+              <tr><td style='text-align:left'>Qwen2.5-VL-7B</td><td>1 fps</td><td>67.8</td><td>55.1</td><td>67.2</td><td>42.1</td><td>66.3</td><td>60.9</td><td>59.9</td><td>51.5</td><td>58.8</td><td>23.7</td><td>44.7</td><td>52.28</td></tr>
+              <tr><td style='text-align:left'>LLaVA-Video-7B</td><td>64</td><td>69.1</td><td>58.7</td><td>68.8</td><td>49.4</td><td>74.3</td><td>59.8</td><td>63.5</td><td>56.2</td><td>57.4</td><td>7.5</td><td>40.4</td><td>51.95</td></tr>
+              <tr><td style='text-align:left'>Qwen3-VL-4B</td><td>64</td><td>77.9</td><td><u>69.7</u></td><td><u>77.6</u></td><td><u>60.1</u></td><td>76.2</td><td><b>75.5</b></td><td><u>72.8</u></td><td><b>63.0</b></td><td><u>66.2</u></td><td>30.1</td><td><b>53.1</b></td><td><u>63.00</u></td></tr>
+              <tr><td colspan="14" style="text-align:left;font-style:italic;background:#fafafa">Online / Streaming Video LLMs</td></tr>
+              <tr><td style='text-align:left'>VideoLLM-online-8B</td><td>2 fps</td><td>8.1</td><td>23.9</td><td>12.1</td><td>14.0</td><td>45.5</td><td>21.2</td><td>20.8</td><td>22.2</td><td>18.8</td><td>12.2</td><td>17.7</td><td>19.26</td></tr>
+              <tr><td style='text-align:left'>Flash-VStream-7B</td><td>1 fps</td><td>24.2</td><td>29.4</td><td>28.5</td><td>33.7</td><td>25.7</td><td>28.8</td><td>28.4</td><td>39.1</td><td>37.2</td><td>5.9</td><td>27.4</td><td>27.90</td></tr>
+              <tr><td style='text-align:left'>Dispider-7B</td><td>1 fps</td><td>57.7</td><td>49.5</td><td>62.1</td><td>44.9</td><td>61.4</td><td>51.6</td><td>54.6</td><td>48.5</td><td>55.4</td><td>4.3</td><td>36.1</td><td>45.35</td></tr>
+              <tr><td style='text-align:left'>TimeChat-Online-7B</td><td>1 fps</td><td>75.2</td><td>46.8</td><td>70.7</td><td>47.8</td><td>69.3</td><td>61.4</td><td>61.9</td><td>55.9</td><td>59.5</td><td>9.7</td><td>41.7</td><td>51.80</td></tr>
+              <tr><td style='text-align:left'>StreamForest-7B</td><td>1 fps</td><td>68.5</td><td>53.2</td><td>71.6</td><td>47.8</td><td>65.4</td><td>60.9</td><td>61.2</td><td><u>58.9</u></td><td>64.9</td><td>32.3</td><td>52.0</td><td>56.60</td></tr>
+              <tr><td style='text-align:left'>Streamo-7B</td><td>1 fps</td><td>79.2</td><td>57.8</td><td>75.0</td><td>49.4</td><td>64.4</td><td>70.1</td><td>66.0</td><td>54.6</td><td>52.0</td><td>31.7</td><td>46.1</td><td>56.05</td></tr>
+              <tr><td style='text-align:left'>HERMES-7B†</td><td>1 fps</td><td><u>85.2</u></td><td>64.2</td><td>71.6</td><td>53.4</td><td><u>74.3</u></td><td>65.2</td><td>69.0</td><td>48.5</td><td>62.2</td><td><b>37.6</b></td><td>49.4</td><td>59.20</td></tr>
+              <tr><td style='text-align:left'>JoyAI-VL-Interaction-9B</td><td>1 fps</td><td>72.5</td><td>61.5</td><td>75.0</td><td>59.0</td><td><b>78.2</b></td><td>64.1</td><td>68.4</td><td>62.0</td><td><b>70.9</b></td><td>12.9</td><td>48.6</td><td>58.50</td></tr>
+              <tr><td style='text-align:left'>Mage-VL-Base (4B, ours)</td><td>1 fps</td><td><b>94.63</b></td><td><b>83.49</b></td><td><b>79.31</b></td><td><b>74.16</b></td><td>70.30</td><td><u>77.17</u></td><td><b>79.84</b></td><td>50.17</td><td>61.49</td><td><u>32.80</u></td><td><u>48.15</u></td><td><b>64.00</b></td></tr>
             </tbody>
           </table>
         </div>
@@ -326,9 +365,31 @@
     <h2 class="title is-3">Contributors</h2>
     <div class="rf-publication-authors" aria-label="Mage-VL contributors">
       <p class="rf-author-list">
-        <span class="rf-author">Microsoft Mage Team</span>
+        <span class="rf-author">Senqiao Yang<sup>*</sup></span>,
+        <span class="rf-author">Kaichen Zhang<sup>*</sup></span>,
+        <span class="rf-author">Zhaoyang Jia<sup>*</sup></span>,
+        <span class="rf-author">Jinghao Guo<sup>*</sup></span>,
+        <span class="rf-author">Yifei Shen<sup>*†</sup></span>,
+        <span class="rf-author">Xinjie Zhang<sup>*†</sup></span>,
+        <span class="rf-author">Xiaoyi Zhang</span>,
+        <span class="rf-author">Haoqing Wang</span>,
+        <span class="rf-author">Xiao Li</span>,
+        <span class="rf-author">Peng Zhang</span>,
+        <span class="rf-author">Xiang An</span>,
+        <span class="rf-author">Yin Xie</span>,
+        <span class="rf-author">Zhening Liu</span>,
+        <span class="rf-author">Xun Guo</span>,
+        <span class="rf-author">Jiahao Li</span>,
+        <span class="rf-author">Shicheng Zheng</span>,
+        <span class="rf-author">Jinglu Wang</span>,
+        <span class="rf-author">Zongyu Guo</span>,
+        <span class="rf-author">Wenxuan Xie</span>,
+        <span class="rf-author">Zihan Zheng</span>,
+        <span class="rf-author">Yuxuan Luo</span>,
+        <span class="rf-author">Bin Li</span>,
+        <span class="rf-author">Yan Lu</span>
       </p>
-      <p class="rf-author-notes">Full contributor list will be released with the technical report.</p>
+      <p class="rf-author-notes"><sup>*</sup> Equal Contribution. <span aria-hidden="true">·</span> <sup>†</sup> Project Leads (<a href="mailto:yshenaw@connect.ust.hk">yshenaw@connect.ust.hk</a>, <a href="mailto:xinjiezhang@microsoft.com">xinjiezhang@microsoft.com</a>).</p>
     </div>
   </div>
 </section>
@@ -337,9 +398,9 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title is-3 has-text-centered">BibTeX 📚</h2>
-    <pre><code>@article{magevl2026,
+    <pre><code>@article{yang2026magevl,
   title={Mage-VL: A Codec-Native Proactive Streaming Multimodal Foundation Model},
-  author={Microsoft Mage Team},
+  author={Yang, Senqiao and Zhang, Kaichen and Jia, Zhaoyang and Guo, Jinghao and Shen, Yifei and Zhang, Xinjie and Zhang, Xiaoyi and Wang, Haoqing and Li, Xiao and Zhang, Peng and An, Xiang and Xie, Yin and Liu, Zhening and Guo, Xun and Li, Jiahao and Zheng, Shicheng and Wang, Jinglu and Guo, Zongyu and Xie, Wenxuan and Zheng, Zihan and Luo, Yuxuan and Li, Bin and Lu, Yan},
   journal={arXiv preprint arXiv:2608.00000},
   year={2026}
 }</code></pre>
