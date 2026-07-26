@@ -1,10 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="description" content="Mage-VL: A Codec-Native Proactive Streaming Multimodal Foundation Model">
   <meta name="keywords" content="Mage-VL, vision-language model, video understanding, codec-native, streaming VLM, Mage-ViT">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta property="og:title" content="Mage-VL: A Codec-Native Proactive Streaming Multimodal Foundation Model">
+  <meta property="og:description" content="A codec-native VLM that reads video the way a codec does, with bio-inspired proactive streaming.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="static/imgs/framework_v2.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" sizes="180x180" href="static/imgs/favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="static/imgs/favicon.png">
   <title>Mage-VL: A Codec-Native Proactive Streaming Multimodal Foundation Model</title>
@@ -15,6 +20,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/result-first.css?v=26">
   <link rel="stylesheet" href="static/css/family-nav.css?v=7">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.3.0/dist/css/glightbox.min.css"/>
 
@@ -41,54 +47,44 @@
     </div>
   </nav>
 
-<!-- ══ HERO ══ -->
-<section class="hero">
-  <div class="hero-body">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column has-text-centered">
-
-          <h1 class="title is-2 publication-title">
-            Mage-VL: A Codec-Native Proactive Streaming<br>Multimodal Foundation Model
-          </h1>
-
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><b>Microsoft Mage Team</b></span>
-          </div>
-
-          <div class="column has-text-centered">
-            <div class="publication-links">
-              <span class="link-block">
-                <a href="https://github.com/microsoft/Mage" target="_blank" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fab fa-github"></i></span><span>Code</span></a></span>
-              <span class="link-block">
-                <a href="https://huggingface.co/microsoft/Mage-VL-Base" target="_blank" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><p style="font-size:18px">🤗</p></span><span>Mage-VL-Base</span></a></span>
-              <span class="link-block">
-                <a href="https://huggingface.co/microsoft/Mage-VL" target="_blank" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><p style="font-size:18px">🤗</p></span><span>Mage-VL</span></a></span>
-            </div>
-          </div>
-
+  <main>
+    <header class="rf-hero">
+      <div class="rf-container">
+        <h1 class="rf-report-title">
+          <span class="rf-report-model">Mage-VL</span>
+          <span class="rf-report-subtitle">A Codec-Native Proactive Streaming<br>Multimodal Foundation Model</span>
+        </h1>
+        <p class="rf-report-description">Microsoft Mage Team</p>
+        <div class="rf-actions">
+          <a class="rf-button" href="https://huggingface.co/collections/microsoft/mage" target="_blank" rel="noopener"><span class="rf-hf-icon" aria-hidden="true">🤗</span> Explore models</a>
+          <a class="rf-button" href="https://huggingface.co/microsoft/Mage-VL-Base" target="_blank" rel="noopener"><span class="rf-hf-icon" aria-hidden="true">🤗</span> Mage-VL-Base</a>
+          <a class="rf-button" href="https://github.com/microsoft/Mage" target="_blank" rel="noopener"><i class="fab fa-github" aria-hidden="true"></i> Code</a>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ══ TEASER ══ -->
-<section class="section" style="padding-top:0; padding-bottom:0">
-  <div class="container is-max-widescreen">
-    <div class="columns is-centered">
-      <div class="column is-full has-text-centered content" style="padding:1rem 1.5rem">
-        <a class="glightbox" href="static/imgs/framework_v2.png" data-gallery="teaser">
-          <img src="static/imgs/framework_v2.png" class="fig-img" alt="Mage-VL framework" loading="lazy"/>
-        </a>
-        <p class="caption" style="margin-top:10px">Mage-VL: a codec-native VLM that reads video the way a codec does — anchor (I) frames processed fully, predicted (P) frames keep only motion-affected patches at a 16×16 grid. Click to expand.</p>
+        <div class="rf-hero-media" aria-label="Mage-VL framework">
+          <figure class="rf-media-card">
+            <a class="glightbox" href="static/imgs/framework_v2.png" data-gallery="hero">
+              <img src="static/imgs/framework_v2.png" alt="Mage-VL codec-native framework" fetchpriority="high">
+            </a>
+          </figure>
+        </div>
+        <p class="caption" style="margin-top:10px">Mage-VL reads video the way a codec does — anchor (I) frames processed fully, predicted (P) frames keep only motion-affected patches at a 16×16 grid. Click to expand.</p>
       </div>
-    </div>
-  </div>
-</section>
+    </header>
+
+    <section class="rf-metrics" aria-label="Headline results">
+      <div class="rf-container">
+        <div class="rf-metric-grid">
+          <div class="rf-metric"><strong>4B</strong><span>parameters</span></div>
+          <div class="rf-metric"><strong>64.0</strong><span>VideoMME</span></div>
+          <div class="rf-metric"><strong>45.4</strong><span>Timelens-ActivityNet</span></div>
+          <div class="rf-metric"><strong>57.4</strong><span>Timelens-QVHighlight</span></div>
+          <div class="rf-metric"><strong>94.75</strong><span>CV-Bench-3D</span></div>
+          <div class="rf-metric"><strong>80.0</strong><span>CrossPoint</span></div>
+        </div>
+        <p class="rf-metric-note">Mage-VL and Qwen3-VL-4B share the same 4B Qwen3 LLM backbone, so the visual tokenizer is the only architectural difference. Numbers from the Mage-VL technical report.</p>
+      </div>
+    </section>
 
 <!-- ══ ABSTRACT ══ -->
 <section class="section">
@@ -301,6 +297,8 @@
 }</code></pre>
   </div>
 </section>
+
+  </main>
 
 <!-- ══ FOOTER ══ -->
 <footer class="footer">
