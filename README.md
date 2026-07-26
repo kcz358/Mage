@@ -19,7 +19,7 @@
   &nbsp;
   <a href="https://arxiv.org/abs/2607.19064"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-Mage--Flow-b31b1b" height="22" /></a>
   &nbsp;
-  <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="Mage-VL Tech Report" src="https://img.shields.io/badge/Tech%20Report-Mage--VL-b31b1b" height="22" /></a>
+  <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="arXiv Mage-VL" src="https://img.shields.io/badge/arXiv-Mage--VL-b31b1b" height="22" /></a>
 </p>
 
 
@@ -38,7 +38,7 @@ The family is organized around a shared **codec-aligned efficiency** philosophy 
 
 | Model | Task | Scale | Code | Report |
 | :--- | :--- | :---: | :--- | :--- |
-| **[Mage-VL](mage_vl/)** | Image & video understanding, proactive streaming | 4B | [`mage_vl/`](mage_vl/README.md) | [📄 Tech Report](https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf) |
+| **[Mage-VL](mage_vl/)** | Image & video understanding, proactive streaming | 4B | [`mage_vl/`](mage_vl/README.md) | [arXiv](https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf) |
 | **[Mage-Flow](mage_flow/)** | Text-to-image generation & instruction-based editing | 4B | [`mage_flow/`](mage_flow/README.md) | [arXiv](https://arxiv.org/abs/2607.19064) |
 
 Both models are compact enough to train, fine-tune, and deploy on modest hardware, yet remain competitive with much larger open systems in their respective domains.
@@ -54,11 +54,11 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 - **Codec-native & from scratch.** The whole visual stack is trained from scratch; the bio-inspired I/P predictive-patch mechanism (`16×16`) cuts visual-token use by **over 75%** (**~1/8 or less** of dense frame sampling), enabling **8× longer** video training and **up to 3.5×** inference speedup.
 - **Data-efficient tokenizer.** Mage-ViT trains on only **~100M unlabeled images/videos**, yet matches or beats encoders pretrained on billions of image-text pairs (SigLIP2, MoonViT).
 - **Matched-LLM video gains.** With the 4B Qwen3 backbone fixed, swapping in Mage-ViT beats Qwen3-VL-4B on **every** reported video & temporal-grounding benchmark (e.g. **+22.5** QVHighlight, **+11.0** VSI-Bench).
-- **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the larger **Phi-4-V-R (15B)** across image, video, and spatial benchmarks.
+- **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the larger **Phi-4-Reasoning-Vision (15B)** across image, video, and spatial benchmarks.
 - **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary and generalizes to real 2026 World Cup broadcasts.
 - **Seven empirical findings** on data efficiency, resolution scaling, codec acceleration, VideoQA-SFT redundancy, motion–spatial synergy, AI4AI data pipelines, and Zero-Vision SFT for multimodal RL.
 
-→ 📄 **[Tech Report](https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf)** · **[`mage_vl/README.md`](mage_vl/README.md)**
+→ Details, installation, inference, and proactive streaming: **[`mage_vl/README.md`](mage_vl/README.md)**
 
 ## 🎨 Mage-Flow — efficient native-resolution generation & editing
 

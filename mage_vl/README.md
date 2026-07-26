@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://microsoft.github.io/Mage"><img alt="Project Page" src="https://img.shields.io/badge/%F0%9F%8C%90-Project%20Page-blue" height="22" /></a>
-  <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="Tech Report" src="https://img.shields.io/badge/%F0%9F%93%84-Tech%20Report-b31b1b" height="22" /></a>
+  <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-Mage--VL-b31b1b" height="22" /></a>
   <a href="https://github.com/microsoft/Mage"><img src="https://img.shields.io/badge/Code-GitHub-181717?logo=github" alt="GitHub" height="22"></a>
   <a href="https://huggingface.co/microsoft/Mage-VL"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--VL-yellow" height="22" /></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-green" alt="License: Apache 2.0" height="22"></a>
@@ -30,7 +30,7 @@ On top of this pair, a **System 1 & System 2 dual-process design** adds proactiv
 - **Data-efficient tokenizer.** Trained on only **~100M unlabeled images/videos**, Mage-ViT matches or beats frontier encoders trained on billions of image-text pairs (SigLIP2 @ 10B, MoonViT @ 2B) — e.g. **99.33% on CIFAR-10** and **85.69% on ImageNet** with 256 tokens, showing web-scale pretraining is *not* essential for a strong VLM front-end.
 - **Native-resolution scaling.** Variable-resolution pretraining lets Mage-ViT improve *monotonically* with the token budget (peaking **>96.1% Food-101 / >86.3% ImageNet** at 676 tokens) where fixed-resolution encoders saturate or degrade.
 - **Matched-LLM video gains.** With the 4B Qwen3 backbone held fixed and only the ViT swapped, Mage-VL improves over Qwen3-VL-4B on **every** reported video and temporal-grounding benchmark — largest on localization-heavy tasks (**+22.5 QVHighlight**, +17.1 ActivityNet, +11.0 VSI-Bench, +24.5 VideoEval-Pro).
-- **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the much larger **Phi-4-V-R (15B)** across image, video, and spatial benchmarks at ~1/4 the parameters.
+- **Strong for its size.** On par with Qwen3-VL-4B on static images while comprehensively surpassing the much larger **Phi-4-Reasoning-Vision (15B)** across image, video, and spatial benchmarks at ~1/4 the parameters.
 - **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary; it tops **TimVal / F1 / ROC-AUC / PR-AUC** on SoccerNet streaming and generalizes to real 2026 World Cup broadcasts.
 
 ## 📥 Model
@@ -71,7 +71,7 @@ Dense recaptioning is driven by an **AI4AI data pipeline** — an agentic closed
 
 Matched-LLM comparison: Mage-VL and Qwen3-VL-4B share the same 4B Qwen3 backbone and differ only in the visual front-end. `–` = not run. **Bold** = best in row.
 
-| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM (5.6B) | Phi-4-V-R (15B) |
+| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM (5.6B) | Phi-4-Reasoning-Vision (15B) |
 | :--- | :---: | :---: | :---: | :---: |
 | *Document understanding* | | | | |
 | DocVQA-val | **95.14** | 94.69 | 92.79 | 76.20 |
@@ -107,7 +107,7 @@ Matched-LLM comparison: Mage-VL and Qwen3-VL-4B share the same 4B Qwen3 backbone
 
 Δ = Mage-VL − Qwen3-VL-4B (same backbone). **Bold** = best in row.
 
-| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM | Phi-4-V-R (15B) | Δ |
+| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM | Phi-4-Reasoning-Vision (15B) | Δ |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | *Video QA* | | | | | |
 | MV-Bench | 65.1 | **66.7** | 44.9 | 49.2 | −1.6 |
