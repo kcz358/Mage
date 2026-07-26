@@ -73,20 +73,6 @@
       </div>
     </header>
 
-    <section class="rf-metrics" aria-label="Headline results">
-      <div class="rf-container">
-        <div class="rf-metric-grid">
-          <div class="rf-metric"><strong>4B</strong><span>parameters</span></div>
-          <div class="rf-metric"><strong>64.0</strong><span>VideoMME</span></div>
-          <div class="rf-metric"><strong>45.4</strong><span>Timelens-ActivityNet</span></div>
-          <div class="rf-metric"><strong>57.4</strong><span>Timelens-QVHighlight</span></div>
-          <div class="rf-metric"><strong>94.75</strong><span>CV-Bench-3D</span></div>
-          <div class="rf-metric"><strong>80.0</strong><span>CrossPoint</span></div>
-        </div>
-        <p class="rf-metric-note">Numbers from the Mage-VL technical report.</p>
-      </div>
-    </section>
-
 <!-- ══ ABSTRACT ══ -->
 <section class="section">
   <div class="container is-max-desktop" style="margin-bottom:2vh">
@@ -95,7 +81,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-          Current mainstream Vision-Language Models heavily rely on computationally expensive offline frame sampling and static vision encoders pre-trained on billions of image–text pairs. We present <strong>Mage-VL</strong>, a codec-native, proactive-streaming multimodal foundation model whose visual perception stack is trained entirely <strong>from scratch</strong>. Built on the OneVision Encoder architecture, Mage-VL abandons uniform frame sampling in favor of a bio-inspired predictive patch mechanism that separates video streams into <strong>anchor (I)</strong> and <strong>predicted (P)</strong> frames using 16×16 patch-level compression. To support low-latency interaction, a streamlined <strong>System 1 &amp; System 2</strong> dual-process network enables proactive streaming responses within a single-model agent — no multi-agent pipeline. Our training journey yields critical data-efficiency insights: a custom vision encoder trained on merely <strong>~100M unlabeled images and videos</strong> achieves comparable or superior performance to frontier encoders trained on billions of static images. The compact <strong>Mage-VL-4B</strong> performs on par with Qwen3-VL-4B on static-image benchmarks, substantially outperforms it on <strong>video understanding and spatial reasoning</strong>, and comprehensively surpasses the larger Phi-4-Reasoning-Vision (15B) across image, video, and spatial benchmarks. We release model checkpoints and training recipes to the community.
+          Standard Vision-Language Models (VLMs) suffer from <strong>Moravec's paradox</strong>: they excel at complex offline visual reasoning, but fail and suffer computational inefficiency on simple streaming perception tasks. We present <strong>Mage-VL</strong>, an efficient codec-native streaming foundation model for real-time multimodal understanding and interaction. At its core, our custom tokenizer, <strong>Mage-ViT</strong>, replaces uniform frame sampling by selectively encoding dynamic, entropy-rich regions using motion vectors and residual energy across sparse <strong>anchor (I)</strong> and <strong>predicted (P)</strong> frames. Operating at a 16×16 patch level, this reduces visual token consumption by <strong>over 75%</strong> while preserving spatio-temporal context. Trained from scratch on merely <strong>100M unlabeled images and videos</strong>, Mage-ViT matches or outperforms flagship encoders trained on billions of image–text pairs. We establish <strong>AI4AI</strong> data pipelines, encompassing prompt-code joint optimization for multimodal captioning and AI-driven performance diagnosis to guide training recipes. Furthermore, through a bio-inspired dual-system architecture—a lightweight <strong>System 1</strong> event gate and a causal <strong>System 2</strong> decoder—Mage-VL enables proactive streaming perception. Extensive evaluations show that <strong>Mage-VL-4B</strong> matches Qwen3-VL-4B on static tasks while achieving strong gains in video understanding and 2D/3D spatial reasoning with <strong>up to 3.5× wall-clock inference speedup</strong>, comprehensively surpassing the 15B Phi-4-Reasoning-Vision baseline. Beyond model artifacts, we deliver <strong>seven key empirical findings</strong> covering pre-training data efficiency, variable-resolution scaling, codec system acceleration, VideoQA SFT redundancy, motion-spatial synergy, AI4AI data pipelines, and Zero-Vision SFT for multimodal RL.
           </p>
         </div>
       </div>
