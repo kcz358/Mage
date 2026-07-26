@@ -115,18 +115,18 @@
         </svg>
         <span>Codec-Native Encoder</span>
       </div>
-      <div class="feature-tab" data-color="amber" onclick="showFeature(1,'amber',event)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <ellipse cx="12" cy="5" rx="8" ry="2.6"/><path d="M4 5v6c0 1.44 3.58 2.6 8 2.6s8-1.16 8-2.6V5"/>
-          <path d="M4 11v6c0 1.44 3.58 2.6 8 2.6s8-1.16 8-2.6v-6"/>
-        </svg>
-        <span>Data Efficiency</span>
-      </div>
-      <div class="feature-tab" data-color="purple" onclick="showFeature(2,'purple',event)">
+      <div class="feature-tab" data-color="purple" onclick="showFeature(1,'purple',event)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
         </svg>
         <span>Proactive Streaming</span>
+      </div>
+      <div class="feature-tab" data-color="amber" onclick="showFeature(2,'amber',event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="12" cy="5" rx="8" ry="2.6"/><path d="M4 5v6c0 1.44 3.58 2.6 8 2.6s8-1.16 8-2.6V5"/>
+          <path d="M4 11v6c0 1.44 3.58 2.6 8 2.6s8-1.16 8-2.6v-6"/>
+        </svg>
+        <span>AI4AI Data Pipeline</span>
       </div>
     </div>
 
@@ -141,15 +141,6 @@
         <p class="feature-panel-cap">Codec-driven patch selection: HEVC (motion + residual) or DCVC-RT (entropy) → per-frame significance map → top-k patches packed into canvases for Mage-ViT.</p>
       </div>
 
-      <div class="feature-panel" data-color="amber">
-        <div class="feature-panel-title">Data-efficient, from scratch</div>
-        <p class="feature-panel-text">Trained from scratch on merely <strong>~100M unlabeled images and videos</strong>, <strong>Mage-ViT</strong> matches or surpasses frontier encoders trained on billions of image–text pairs — SigLIP2 (10B) and MoonViT (2B) — using <strong>1/100–1/20</strong> of the data. Variable-resolution pre-training lets it scale <strong>monotonically</strong> with the visual-token budget (peaking <strong>&gt;86% on ImageNet</strong> at 676 tokens), whereas fixed-resolution encoders saturate or degrade.</p>
-        <a class="glightbox feature-panel-img" href="static/imgs/vit_scaling.png" data-gallery="hl">
-          <img src="static/imgs/vit_scaling.png" loading="lazy"/>
-        </a>
-        <p class="feature-panel-cap">ImageNet top-1 vs visual-token budget: Mage-ViT keeps improving and stays on top, while SigLIP2 / OV-Encoder peak then degrade and MoonViT lags.</p>
-      </div>
-
       <div class="feature-panel" data-color="purple">
         <div class="feature-panel-title">Bio-inspired proactive streaming</div>
         <p class="feature-panel-text">A single-model <strong>System 1 &amp; System 2</strong> design gives low-latency, proactive responses to continuous video. A lightweight <strong>System 1 cognition gate</strong> watches each rolling codec window and decides <em>when</em> to speak; only when an event is response-worthy does it trigger the full <strong>System 2</strong> VLM to generate — no multi-agent pipeline. It stays silent through routine play and speaks the moment an event completes, generalizing to real broadcasts (e.g. 2026 World Cup matches).</p>
@@ -157,6 +148,15 @@
           <img src="static/imgs/framework.png" loading="lazy"/>
         </a>
         <p class="feature-panel-cap">Proactive streaming: Mage-ViT features feed an event gate that stays silent until a response-worthy moment, then triggers the LLM decoder to produce event-conditioned commentary.</p>
+      </div>
+
+      <div class="feature-panel" data-color="amber">
+        <div class="feature-panel-title">AI4AI data pipeline</div>
+        <p class="feature-panel-text">The training data refines <em>itself</em> through an agentic closed loop. A frozen <strong>Qwen3-VL-32B</strong> captions images; a <strong>GPT-5 rubric scorer</strong> grades each caption on completeness, redundancy, coherence, and OCR fidelity; and a <strong>GitHub Copilot</strong> agent co-designs the prompt <em>and</em> harness code (e.g. rendering timestamp overlays so the captioner anchors events by OCR) under a human validation gate. Ten refine–verify iterations lift every downstream OCR / document / chart / perception benchmark (<strong>+5.6 InfoVQA</strong>, <strong>+3.8 OCRBench</strong>, <strong>+3.8 RealWorldQA</strong>); the same paradigm also drives Stage-3 data diagnostics, and this work inspired SkillOpt-Lite.</p>
+        <a class="glightbox feature-panel-img" href="static/imgs/ai4ai_pipeline.png" data-gallery="hl">
+          <img src="static/imgs/ai4ai_pipeline.png" loading="lazy"/>
+        </a>
+        <p class="feature-panel-cap">AI4AI closed loop: frozen Qwen3-VL-32B captions → GPT-5 rubric scorer → Copilot prompt/code modifier → validation gate → improved prompt P<sub>t+1</sub>.</p>
       </div>
 
     </div>
