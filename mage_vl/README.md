@@ -109,59 +109,46 @@ Performance comparison across models. Mage-VL-4B and Qwen3-VL-4B use the same 4B
 <details>
 <summary><b>Video understanding & temporal grounding — click to expand</b></summary>
 
-Δ = Mage-VL-4B − Qwen3-VL-4B. **Bold** = best in row.
+**Bold** = best in row.
 
-| Benchmark | Mage-VL-4B | Qwen3-VL-4B | Phi-4-MM-5.6B | Phi-4-R-V-15B | Δ |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| *Video QA* | | | | | |
-| MV-Bench | 65.1 | **66.7** | 44.9 | 49.2 | −1.6 |
-| NextQA | **83.1** | 79.8 | 54.1 | 69.0 | +3.3 |
-| VideoMME | **64.0** | 59.7 | 44.7 | 55.3 | +4.3 |
-| LongVideoBench | **61.3** | 57.7 | 41.14 | 51.2 | +3.5 |
-| LVBench | **41.8** | 39.2 | 25.31 | 34.4 | +2.6 |
-| MLVU-dev | **68.7** | 61.5 | 44.18 | 51.8 | +7.2 |
-| VideoEval-Pro | **45.2** | 20.7 | 14.35 | 16.8 | +24.5 |
-| *Temporal grounding* | | | | | |
-| Timelens-Charades | **50.7** | 43.1 | 4.09 | 20.6 | +7.6 |
-| Timelens-ActivityNet | **45.4** | 28.4 | 2.03 | 23.0 | +17.1 |
-| Timelens-QVHighlight | **57.4** | 34.9 | 2.47 | 11.6 | +22.5 |
-| *Spatial reasoning* | | | | | |
-| VSI-Bench | **64.3** | 53.3 | 24.09 | 25.5 | +11.0 |
-| *Tracking (J&F)* | | | | | |
-| Ref-DAVIS17 | **25.83** | 7.48 | 3.14 | 2.15 | +18.35 |
-| MeViS-ValidU | **22.55** | 3.16 | 10.28 | 1.53 | +19.39 |
-| ReasonVOS | **17.76** | 9.66 | 9.50 | 9.77 | +8.10 |
-| Ref-YT-VOS | **25.57** | 5.28 | 8.64 | 3.85 | +20.29 |
-
-The lightweight **tc8** codec setting preserves most of these gains at a fraction of the visual-token cost (e.g. VideoMME 57.9, MLVU-dev 63.2, Timelens-QVHighlight 42.6), and is the fastest of all compared models on most video benchmarks on an 8×B200 node.
+| Benchmark | Mage-VL-4B | Qwen3-VL-4B | Phi-4-MM-5.6B | Phi-4-R-V-15B |
+| :--- | :---: | :---: | :---: | :---: |
+| *Video QA* | | | | |
+| MV-Bench | 65.1 | **66.7** | 44.9 | 49.2 |
+| NextQA | **83.1** | 79.8 | 54.1 | 69.0 |
+| VideoMME | **64.0** | 59.7 | 44.7 | 55.3 |
+| LongVideoBench | **61.3** | 57.7 | 41.14 | 51.2 |
+| LVBench | **41.8** | 39.2 | 25.31 | 34.4 |
+| MLVU-dev | **68.7** | 61.5 | 44.18 | 51.8 |
+| VideoEval-Pro | **45.2** | 20.7 | 14.35 | 16.8 |
+| *Temporal grounding* | | | | |
+| Timelens-Charades | **50.7** | 43.1 | 4.09 | 20.6 |
+| Timelens-ActivityNet | **45.4** | 28.4 | 2.03 | 23.0 |
+| Timelens-QVHighlight | **57.4** | 34.9 | 2.47 | 11.6 |
+| *Spatial reasoning* | | | | |
+| VSI-Bench | **64.3** | 53.3 | 24.09 | 25.5 |
+| *Tracking (J&F)* | | | | |
+| Ref-DAVIS17 | **25.83** | 7.48 | 3.14 | 2.15 |
+| MeViS-ValidU | **22.55** | 3.16 | 10.28 | 1.53 |
+| ReasonVOS | **17.76** | 9.66 | 9.50 | 9.77 |
+| Ref-YT-VOS | **25.57** | 5.28 | 8.64 | 3.85 |
 
 </details>
 
 <details>
 <summary><b>Proactive streaming (SoccerNet) & online video (OVO-Bench) — click to expand</b></summary>
 
-**SoccerNet — response timing** (StreamMind protocol, codec-native inputs; zero-tolerance canvas matching). TriggerAcc / TimVal follow each model's protocol; F1 / ROC-AUC / PR-AUC use raw per-position predictions. **Bold** = best in column.
+**SoccerNet — response timing** (StreamMind protocol, codec-native inputs, zero-tolerance canvas matching). **Bold** = best in column.
 
 | Method | TriggerAcc | TimVal | F1 | ROC-AUC | PR-AUC |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| VideoLLM-Online | 31.25 | 28.34 | 0.00 | 54.39 | 0.78 |
-| VideoLLM-MoD | 31.24 | 28.12 | – | – | – |
 | StreamMind | 52.18 | 47.36 | – | – | – |
-| JoyAI-VL-Interaction | **97.98** | 19.25 | 3.55 | 56.26 | 1.68 |
+| JoyAI-VL-Interaction-9B | **97.98** | 19.25 | 3.55 | 56.26 | 1.68 |
 | **Mage-VL-4B** | 79.21 | **55.54** | **16.35** | **83.14** | **9.30** |
 
 JoyAI's high TriggerAcc comes from predicting silence almost everywhere under SoccerNet's heavy class imbalance, so it collapses on the precision-sensitive metrics; StreamMind is trained *in-distribution* on SoccerNet, whereas Mage-VL is not.
 
-**SoccerNet — response quality** (teacher-forced at annotated boundaries). **Bold** = best in column.
-
-| Method | Fluency ↑ | PPL ↓ | Correctness ↑ |
-| :--- | :---: | :---: | :---: |
-| VideoLLM-Online | 46.35 | 1.79 | 53.50 |
-| VideoLLM-MoD | 45.34 | 1.80 | 53.30 |
-| StreamMind | 70.35 | **1.59** | **89.20** |
-| **Mage-VL-4B** | **83.50** | 2.18 | 84.42 |
-
-**OVO-Bench** — online video understanding (SimpleStream recent-window protocol, 4 frames @ 1 fps; no streaming-specific fine-tuning). Mage-VL sets a new state-of-the-art overall score **among streaming architectures**. **Bold** = best in column.
+**OVO-Bench** — online video understanding (SimpleStream recent-window protocol, 4 frames @ 1 fps; no streaming-specific fine-tuning). Mage-VL sets a new state-of-the-art overall score **among streaming architectures**. **Bold** = best in column among the models shown.
 
 | Model | Type | RT-Avg | BT-Avg | Overall |
 | :--- | :--- | :---: | :---: | :---: |
