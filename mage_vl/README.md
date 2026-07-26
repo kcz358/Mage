@@ -2,8 +2,9 @@
 
 <p align="center">
   <a href="https://microsoft.github.io/Mage"><img alt="Project Page" src="https://img.shields.io/badge/%F0%9F%8C%90-Project%20Page-blue" height="22" /></a>
+  <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="Tech Report" src="https://img.shields.io/badge/%F0%9F%93%84-Tech%20Report-b31b1b" height="22" /></a>
   <a href="https://github.com/microsoft/Mage"><img src="https://img.shields.io/badge/Code-GitHub-181717?logo=github" alt="GitHub" height="22"></a>
-  <a href="https://huggingface.co/Mage-VL/Mage-VL"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--VL-yellow" height="22" /></a>
+  <a href="https://huggingface.co/microsoft/Mage-VL"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--VL-yellow" height="22" /></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-green" alt="License: Apache 2.0" height="22"></a>
 </p>
 
@@ -34,11 +35,11 @@ On top of this pair, a **System 1 & System 2 dual-process design** adds proactiv
 
 ## 📥 Model
 
-A **single checkpoint**, `Mage-VL/Mage-VL`, is one unified model that **simultaneously** provides image & video understanding **and** the proactive streaming gate — the same weights answer offline image/video questions and drive event-gated commentary. It covers every Mage-VL capability: image understanding, frame-sampled video, traditional H.264/HEVC codec video, neural DCVC-RT codec video, and event-gated streaming. The repository bundles the codec processor, the neural codec package, and the proactive gate weights — no separate understanding, NVC, or streaming checkpoint is required.
+A **single checkpoint**, `microsoft/Mage-VL`, is one unified model that **simultaneously** provides image & video understanding **and** the proactive streaming gate — the same weights answer offline image/video questions and drive event-gated commentary. It covers every Mage-VL capability: image understanding, frame-sampled video, traditional H.264/HEVC codec video, neural DCVC-RT codec video, and event-gated streaming. The repository bundles the codec processor, the neural codec package, and the proactive gate weights — no separate understanding, NVC, or streaming checkpoint is required.
 
 | Model | Task | Scale | Backbone | Hugging Face |
 | :--- | :--- | :---: | :--- | :--- |
-| `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | Mage-ViT + Qwen3-4B-Instruct-2507 | [🤗 Mage-VL/Mage-VL](https://huggingface.co/Mage-VL/Mage-VL) |
+| `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | Mage-ViT + Qwen3-4B-Instruct-2507 | [🤗 microsoft/Mage-VL](https://huggingface.co/microsoft/Mage-VL) |
 
 ## 🏗️ Architecture
 
@@ -166,7 +167,7 @@ Beyond the model, the report distills **seven empirical findings** for efficient
 
 ## 🚀 Quick Start
 
-A single checkpoint, `Mage-VL/Mage-VL`, covers every capability below. Two entry points:
+A single checkpoint, `microsoft/Mage-VL`, covers every capability below. Two entry points:
 
 | Capability | Script | Entry point |
 |---|---|---|
@@ -280,7 +281,7 @@ git clone -b feat/mage-vl https://github.com/kcz358/sglang
 cd sglang
 pip install -e 'python[all]'
 python -m sglang.launch_server \
-  --model-path Mage-VL/Mage-VL \
+  --model-path microsoft/Mage-VL \
   --trust-remote-code
 ```
 

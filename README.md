@@ -18,6 +18,8 @@
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="Mage-VL License: Apache 2.0" src="https://img.shields.io/badge/Mage--VL%20License-Apache%202.0-green.svg" height="22" /></a>
   &nbsp;
   <a href="https://arxiv.org/abs/2607.19064"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-Mage--Flow-b31b1b" height="22" /></a>
+  &nbsp;
+  <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="Mage-VL Tech Report" src="https://img.shields.io/badge/Tech%20Report-Mage--VL-b31b1b" height="22" /></a>
 </p>
 
 
@@ -36,7 +38,7 @@ The family is organized around a shared **codec-aligned efficiency** philosophy 
 
 | Model | Task | Scale | Code | Report |
 | :--- | :--- | :---: | :--- | :--- |
-| **[Mage-VL](mage_vl/)** | Image & video understanding, proactive streaming | 4B | [`mage_vl/`](mage_vl/README.md) | [🤗 Model](https://huggingface.co/Mage-VL/Mage-VL) |
+| **[Mage-VL](mage_vl/)** | Image & video understanding, proactive streaming | 4B | [`mage_vl/`](mage_vl/README.md) | [📄 Tech Report](https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf) |
 | **[Mage-Flow](mage_flow/)** | Text-to-image generation & instruction-based editing | 4B | [`mage_flow/`](mage_flow/README.md) | [arXiv](https://arxiv.org/abs/2607.19064) |
 
 Both models are compact enough to train, fine-tune, and deploy on modest hardware, yet remain competitive with much larger open systems in their respective domains.
@@ -56,7 +58,7 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 - **Proactive streaming, single model.** A frozen-backbone cognition gate delivers low-latency, event-gated commentary and generalizes to real 2026 World Cup broadcasts.
 - **Seven empirical findings** on data efficiency, resolution scaling, codec acceleration, VideoQA-SFT redundancy, motion–spatial synergy, AI4AI data pipelines, and Zero-Vision SFT for multimodal RL.
 
-→ **[`mage_vl/README.md`](mage_vl/README.md)**
+→ 📄 **[Tech Report](https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf)** · **[`mage_vl/README.md`](mage_vl/README.md)**
 
 ## 🎨 Mage-Flow — efficient native-resolution generation & editing
 
@@ -74,7 +76,7 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 
 ## 📣 News
 
-- **2026-07-25** — **Mage-VL** released on 🤗 [Hugging Face](https://huggingface.co/Mage-VL/Mage-VL): a single codec-native 4B checkpoint for image & video understanding **with** a built-in proactive streaming gate.
+- **2026-07-25** — **Mage-VL** released on 🤗 [Hugging Face](https://huggingface.co/microsoft/Mage-VL): a single codec-native 4B checkpoint for image & video understanding **with** a built-in proactive streaming gate.
 - **2026-07-22** — **Mage-Flow** checkpoints released on 🤗 [Hugging Face](https://huggingface.co/collections/microsoft/mage): Base, RL-aligned, and 4-step Turbo variants for both text-to-image generation and image editing.
 
 ## 📥 Model Zoo
@@ -83,7 +85,7 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 
 | Model | Task | Scale | Hugging Face |
 | :--- | :--- | :---: | :--- |
-| `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | [🤗 Mage-VL/Mage-VL](https://huggingface.co/Mage-VL/Mage-VL) |
+| `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | [🤗 microsoft/Mage-VL](https://huggingface.co/microsoft/Mage-VL) |
 
 **Mage-Flow** — generation & editing. Each checkpoint is a self-contained diffusers-style repo (`transformer/` + shared `vae/`, `text_encoder/`, `scheduler/`).
 
