@@ -196,10 +196,10 @@ Codec-based video inference requires `ffmpeg` and `ffprobe` on `PATH`. The tradi
 
 Two sample inputs ship with the repository:
 
-| File | Content |
-|---|---|
-| `mage_vl/assets/examples/dog.jpg` | Photo of a dog sitting in front of a patterned rug |
-| `mage_vl/assets/examples/soccer-broadcast.mp4` | 30s, 960x540 football broadcast clip |
+| Input | Question | Content |
+|---|---|---|
+| `mage_vl/assets/examples/dog.jpg` | Describe this image in detail. | Photo of a dog sitting in front of a patterned rug |
+| `mage_vl/assets/examples/soccer-broadcast.mp4` | Describe this video. | 30s, 960×540 football broadcast clip |
 
 ### Offline inference
 
