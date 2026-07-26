@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Run Mage-VL-Base image or video inference offline or through SGLang."""
+"""Run Mage-VL image or video inference offline or through SGLang."""
 
 import argparse
 import base64
@@ -144,7 +144,7 @@ def main():
     parser.add_argument("--num-frames", type=int, default=32)
     parser.add_argument("--max-pixels", type=int, default=150000)
     parser.add_argument("--question", default="Describe this media.")
-    parser.add_argument("--model", default="Mage-VL/Mage-VL-Base")
+    parser.add_argument("--model", default="microsoft/Mage-VL")
     parser.add_argument("--max-new-tokens", type=int, default=256)
     parser.add_argument("--base-url", default="http://localhost:30000/v1")
     parser.add_argument("--api-key", default="EMPTY")

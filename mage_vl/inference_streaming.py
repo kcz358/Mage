@@ -1,4 +1,4 @@
-"""Run event-gated Mage-VL-Base inference on an arbitrary video.
+"""Run event-gated Mage-VL inference on an arbitrary video.
 
 The video is split into non-overlapping segments. The optional StreamMind gate
 scores the complete causal segment stream once, then standard Transformers
@@ -23,7 +23,7 @@ USER_PROMPT = "Please describe the video content in detail based on the provided
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--video", required=True, help="Input video path.")
-    parser.add_argument("--checkpoint", default="Mage-VL/Mage-VL-Base")
+    parser.add_argument("--checkpoint", default="microsoft/Mage-VL")
     parser.add_argument("--video_backend", choices=("codec", "frames"), default="codec")
     parser.add_argument("--num_frames", type=int, default=16)
     parser.add_argument("--cur_fps", type=float, default=2)
