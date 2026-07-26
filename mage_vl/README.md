@@ -263,6 +263,8 @@ python mage_vl/inference_base.py \
 Online mode sends an image or sampled video frames to an OpenAI-compatible SGLang server:
 
 ```bash
+pip install openai
+
 python mage_vl/inference_base.py \
   --mode online \
   --image mage_vl/assets/examples/dog.jpg \
@@ -277,9 +279,16 @@ python mage_vl/inference_base.py \
   --base-url http://localhost:30000/v1
 ```
 
-Serve the checkpoint with the Mage-VL SGLang branch:
+Use `--model`, `--max-new-tokens`, and `--api-key` to override their defaults.
+
+Serve the checkpoint with the Mage-VL SGLang branch (building it needs `protobuf-compiler` and a Rust toolchain):
 
 ```bash
+sudo apt-get update && sudo apt-get install -y protobuf-compiler
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+  | sh -s -- -y --profile minimal --default-toolchain 1.90.0
+source "$HOME/.cargo/env"
+
 git clone -b feat/mage-vl https://github.com/kcz358/sglang
 cd sglang
 pip install -e 'python[all]'
