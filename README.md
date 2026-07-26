@@ -111,7 +111,7 @@ Each model is self-contained in its own directory with a dedicated README:
 ```bibtex
 @article{mage2026magevl,
   title={Mage-VL: An Efficient Codec-Native Streaming Multimodal Foundation Model},
-  author={Microsoft Mage Team},
+  author={Yang, Senqiao and Zhang, Kaichen and Jia, Zhaoyang and Guo, Jinghao and Shen, Yifei and Zhang, Xinjie and Zhang, Xiaoyi and Wang, Haoqing and Li, Xiao and An, Xiang and Xie, Yin and Liu, Zhening and Guo, Xun and Li, Jiahao and Zheng, Shicheng and Wang, Jinglu and Guo, Zongyu and Xie, Wenxuan and Zheng, Zihan and Luo, Yuxuan and Li, Bin and Lu, Yan},
   journal={arXiv preprint},
   year={2026}
 }
