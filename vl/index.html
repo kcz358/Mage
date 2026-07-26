@@ -54,7 +54,7 @@
           <span class="rf-report-model">Mage-VL</span>
           <span class="rf-report-subtitle">A Codec-Native Proactive Streaming<br>Multimodal Foundation Model</span>
         </h1>
-        <p class="rf-report-description">Microsoft Mage Team</p>
+        <p class="rf-report-description"><a href="#contributors">Microsoft Mage Team</a></p>
         <div class="rf-actions">
           <a class="rf-button" href="https://huggingface.co/microsoft/Mage-VL" target="_blank" rel="noopener"><span class="rf-hf-icon" aria-hidden="true">🤗</span> Mage-VL</a>
           <a class="rf-button" href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf" target="_blank" rel="noopener"><i class="fas fa-file-pdf" aria-hidden="true"></i> Technical report</a>
@@ -228,57 +228,128 @@
     <div class="columns is-centered">
       <div class="column is-full has-text-centered content">
 
-        <p style="max-width:820px;margin:0 auto 1.2rem;color:#555">
-          Mage-VL and <strong>Qwen3-VL-4B</strong> share the same 4B Qwen3 LLM backbone, so the visual tokenizer (dense ViT → <strong>Mage-ViT</strong>) is the <em>only</em> architectural difference — isolating the effect of codec-aligned sparsity. Higher is better; column best in <b>bold</b>.
+        <p style="max-width:860px;margin:0 auto 1.2rem;color:#555">
+          Mage-VL and <strong>Qwen3-VL-4B</strong> share the same 4B Qwen3 LLM backbone, so the visual tokenizer (dense ViT → <strong>Mage-ViT</strong>) is the <em>only</em> architectural difference — isolating the effect of codec-aligned sparsity. <strong>Phi-4-MM (5.6B)</strong> and <strong>Phi-4-V-R (15B)</strong> are reported for reference. Higher is better; row best in <b>bold</b>, second best <u>underlined</u>.
         </p>
 
         <h2 class="title is-4">Video Understanding &amp; Temporal Grounding</h2>
         <div class="table-container m-2">
           <table class="table is-striped is-hoverable is-fullwidth" id="vid-table">
             <thead>
-              <tr><th style="cursor:pointer">Benchmark</th><th style="cursor:pointer">Qwen3-VL-4B</th><th style="cursor:pointer">Mage-VL-4B</th><th style="cursor:pointer">Δ</th></tr>
+              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM</th><th>Phi-4-V-R-15B</th></tr>
             </thead>
             <tbody>
-              <tr><td>VideoMME</td><td>59.7</td><td><b>64.0</b></td><td>+4.3</td></tr>
-              <tr><td>Timelens-ActivityNet</td><td>28.4</td><td><b>45.4</b></td><td>+17.1</td></tr>
-              <tr><td>Timelens-QVHighlight</td><td>34.9</td><td><b>57.4</b></td><td>+22.5</td></tr>
+              <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Video QA</td></tr>
+              <tr><td>MV-Bench</td><td><u>65.1</u></td><td><b>66.7</b></td><td>44.9</td><td>49.2</td></tr>
+              <tr><td>NextQA</td><td><b>83.1</b></td><td><u>79.8</u></td><td>54.1</td><td>69.0</td></tr>
+              <tr><td>VideoMME</td><td><b>64.0</b></td><td><u>59.7</u></td><td>44.7</td><td>55.3</td></tr>
+              <tr><td>LongVideoBench</td><td><b>61.3</b></td><td><u>57.7</u></td><td>41.14</td><td>51.2</td></tr>
+              <tr><td>LVBench</td><td><b>41.8</b></td><td><u>39.2</u></td><td>25.31</td><td>34.4</td></tr>
+              <tr><td>MLVU-dev</td><td><b>68.7</b></td><td><u>61.5</u></td><td>44.18</td><td>51.8</td></tr>
+              <tr><td>VideoMME (w/ sub.)</td><td><u>66.3</u></td><td><b>70.2</b></td><td>45.4</td><td>58.3</td></tr>
+              <tr><td>VideoMME-V2</td><td><u>24.3</u></td><td><b>24.4</b></td><td>19.2</td><td>23.9</td></tr>
+              <tr><td>VideoEval-Pro</td><td><b>45.2</b></td><td><u>20.7</u></td><td>14.35</td><td>16.8</td></tr>
+              <tr><td>JumpScore</td><td><b>45.60</b></td><td><u>3.82</u></td><td>3.61</td><td>1.53</td></tr>
+              <tr><td>MMOU-Test-Mini</td><td><u>39.3</u></td><td>38.1</td><td>32.22</td><td><b>51.9</b></td></tr>
+              <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Temporal grounding</td></tr>
+              <tr><td>Timelens-Charades</td><td><b>50.7</b></td><td><u>43.1</u></td><td>4.09</td><td>20.6</td></tr>
+              <tr><td>Timelens-ActivityNet</td><td><b>45.4</b></td><td><u>28.4</u></td><td>2.03</td><td>23.0</td></tr>
+              <tr><td>Timelens-QVHighlight</td><td><b>57.4</b></td><td><u>34.9</u></td><td>2.47</td><td>11.6</td></tr>
+              <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Spatial reasoning</td></tr>
+              <tr><td>VSI-Bench</td><td><b>64.3</b></td><td><u>53.3</u></td><td>24.09</td><td>25.5</td></tr>
+              <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Tracking (J&amp;F)</td></tr>
+              <tr><td>Ref-DAVIS17</td><td><b>25.83</b></td><td><u>7.48</u></td><td>3.14</td><td>2.15</td></tr>
+              <tr><td>MeViS-ValidU</td><td><b>22.55</b></td><td>3.16</td><td><u>10.28</u></td><td>1.53</td></tr>
+              <tr><td>ReasonVOS</td><td><b>17.76</b></td><td>9.66</td><td>9.50</td><td><u>9.77</u></td></tr>
+              <tr><td>Ref-YT-VOS</td><td><b>25.57</b></td><td><u>5.28</u></td><td>8.64</td><td>3.85</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2 class="title is-4" style="margin-top:2rem">Spatial Intelligence</h2>
-        <div class="table-container m-2">
-          <table class="table is-striped is-hoverable is-fullwidth" id="spa-table">
-            <thead>
-              <tr><th style="cursor:pointer">Benchmark</th><th style="cursor:pointer">Qwen3-VL-4B</th><th style="cursor:pointer">Mage-VL-4B</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>CV-Bench-2D</td><td>81.00</td><td><b>82.13</b></td></tr>
-              <tr><td>CV-Bench-3D</td><td>92.30</td><td><b>94.75</b></td></tr>
-              <tr><td>EmbSpatial</td><td>77.50</td><td><b>82.67</b></td></tr>
-              <tr><td>CrossPoint (cross-view)</td><td>26.90</td><td><b>80.00</b></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h2 class="title is-4" style="margin-top:2rem">Image Understanding</h2>
-        <p style="font-size:.82rem;color:#888;text-align:center">On par with Qwen3-VL-4B on aggregate; ahead on MathVision / MMBench, behind on MMMU / MathVista.</p>
+        <h2 class="title is-4" style="margin-top:2rem">Image Understanding &amp; Spatial Intelligence</h2>
         <div class="table-container m-2">
           <table class="table is-striped is-hoverable is-fullwidth" id="img-table">
             <thead>
-              <tr><th style="cursor:pointer">Benchmark</th><th style="cursor:pointer">Qwen3-VL-4B</th><th style="cursor:pointer">Mage-VL-4B</th></tr>
+              <tr><th>Benchmark</th><th>Mage-VL-4B</th><th>Qwen3-VL-4B</th><th>Phi-4-MM-5.6B</th><th>Phi-4-V-R-15B</th></tr>
             </thead>
             <tbody>
-              <tr><td>MathVision</td><td>21.05</td><td><b>23.65</b></td></tr>
-              <tr><td>MMBench-EN-dev</td><td>83.25</td><td><b>84.02</b></td></tr>
-              <tr><td>MMBench-CN-dev</td><td>80.58</td><td><b>82.04</b></td></tr>
-              <tr><td>MathVista-mini</td><td><b>73.50</b></td><td>67.20</td></tr>
-              <tr><td>MMMU</td><td><b>67.81</b></td><td>54.67</td></tr>
+              <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Document understanding</td></tr>
+              <tr><td>DocVQA-val</td><td><b>95.14</b></td><td><u>94.69</u></td><td>92.79</td><td>76.20</td></tr>
+              <tr><td>InfoVQA-val</td><td><b>80.33</b></td><td><u>79.50</u></td><td>71.84</td><td>55.41</td></tr>
+              <tr><td>AI2D w/ Mask</td><td><b>83.16</b></td><td>81.54</td><td>81.83</td><td><u>82.87</u></td></tr>
+              <tr><td>AI2D w/o Mask</td><td>91.87</td><td><u>92.20</u></td><td>91.35</td><td><b>93.81</b></td></tr>
+              <tr><td>ChartQA</td><td><b>84.88</b></td><td><u>83.96</u></td><td>83.76</td><td>83.40</td></tr>
+              <tr><td>OCRBench</td><td><b>81.80</b></td><td>81.60</td><td><u>81.70</u></td><td>73.90</td></tr>
+              <tr><td>CC-OCR Doc</td><td><u>32.25</u></td><td><b>39.69</b></td><td>4.99</td><td>17.65</td></tr>
+              <tr><td>MultiDocVQA-val</td><td><b>87.46</b></td><td><u>87.21</u></td><td>46.84</td><td>58.35</td></tr>
+              <tr><td>DUDE</td><td><u>46.44</u></td><td><b>50.98</b></td><td>3.78</td><td>34.34</td></tr>
+              <tr><td>WebSRC-val</td><td><u>92.80</u></td><td><b>95.40</b></td><td>71.30</td><td>76.60</td></tr>
+              <tr><td>ChartQAPro</td><td><b>32.57</b></td><td><u>26.79</u></td><td>0.13</td><td>25.38</td></tr>
+              <tr><td>TextVQA-val</td><td><u>77.28</u></td><td><b>80.55</b></td><td>39.93</td><td>76.06</td></tr>
+              <tr><td>CharXiv-Descr</td><td><u>75.85</u></td><td>74.40</td><td>18.65</td><td><b>75.98</b></td></tr>
+              <tr><td>CharXiv-Reason</td><td><u>35.20</u></td><td>26.10</td><td>0.10</td><td><b>36.10</b></td></tr>
+              <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">General VQA</td></tr>
+              <tr><td>MMBench-EN-dev</td><td><u>84.02</u></td><td>83.25</td><td>65.81</td><td><b>84.19</b></td></tr>
+              <tr><td>MMBench-CN-dev</td><td><b>82.04</b></td><td><u>80.58</u></td><td>75.17</td><td>79.47</td></tr>
+              <tr><td>RealWorldQA</td><td>70.46</td><td><b>70.85</b></td><td>60.65</td><td><u>70.72</u></td></tr>
+              <tr><td>MMStar</td><td><b>67.32</b></td><td><u>62.04</u></td><td>61.24</td><td>59.63</td></tr>
+              <tr><td>MME-Perception</td><td><b>1709.54</b></td><td><u>1703.50</u></td><td>1409.66</td><td>1590.21</td></tr>
+              <tr><td>SeedBench (All)</td><td><b>76.78</b></td><td><u>75.65</u></td><td>68.28</td><td>73.70</td></tr>
+              <tr><td>SeedBench-Image</td><td><b>79.32</b></td><td><u>78.87</u></td><td>74.48</td><td>77.97</td></tr>
+              <tr><td>SeedBench2-Plus</td><td><u>69.21</u></td><td><b>69.65</b></td><td>68.38</td><td>69.48</td></tr>
+              <tr><td>MMT-val</td><td>64.47</td><td><b>66.52</b></td><td>59.19</td><td><u>64.89</u></td></tr>
+              <tr><td>CV-Bench</td><td><b>87.79</b></td><td><u>85.37</u></td><td>57.09</td><td>81.31</td></tr>
+              <tr><td>MME-RealWorld</td><td><b>66.52</b></td><td><u>63.20</u></td><td>32.45</td><td>57.80</td></tr>
+              <tr><td>MME-RealWorld-CN</td><td><u>61.33</u></td><td><b>63.09</b></td><td>21.19</td><td>46.07</td></tr>
+              <tr><td colspan="5" style="text-align:left;font-style:italic;background:#fafafa">Spatial intelligence</td></tr>
+              <tr><td>CV-Bench-2D</td><td><b>82.13</b></td><td><u>81.00</u></td><td>56.12</td><td>80.11</td></tr>
+              <tr><td>CV-Bench-3D</td><td><b>94.75</b></td><td><u>92.30</u></td><td>56.92</td><td>82.50</td></tr>
+              <tr><td>BLINK</td><td><b>65.11</b></td><td><u>65.10</u></td><td>35.24</td><td>57.80</td></tr>
+              <tr><td>EmbSpatial</td><td><b>82.67</b></td><td><u>77.50</u></td><td>41.51</td><td>72.67</td></tr>
+              <tr><td>CRPE-Relation</td><td><u>76.12</u></td><td><b>77.70</b></td><td>34.60</td><td>74.46</td></tr>
+              <tr><td>CrossPoint</td><td><b>80.00</b></td><td>26.90</td><td>12.20</td><td><u>47.73</u></td></tr>
+              <tr><td>ERQA</td><td>36.00</td><td><b>42.30</b></td><td>30.75</td><td><u>40.25</u></td></tr>
+              <tr><td>MMSI-Bench</td><td>28.20</td><td><b>31.00</b></td><td><u>28.80</u></td><td>25.70</td></tr>
+              <tr><td>SAT</td><td><u>67.33</u></td><td><b>69.30</b></td><td>55.33</td><td>66.67</td></tr>
             </tbody>
           </table>
         </div>
-        <p style="font-size:.8rem;color:#aaa;margin-top:.5rem">Numbers from the Mage-VL technical report. Mage-VL also surpasses the larger Phi-4-V-R (15B) on most of these benchmarks.</p>
+        <p style="font-size:.8rem;color:#aaa;margin-top:.5rem">Numbers from the Mage-VL technical report.</p>
       </div>
+    </div>
+  </div>
+</section>
+<!-- ══ CONTRIBUTORS ══ -->
+<section class="section rf-contributors-section" id="contributors">
+  <div class="container is-max-desktop content has-text-centered">
+    <h2 class="title is-3">Contributors</h2>
+    <div class="rf-publication-authors" aria-label="Mage-VL contributors">
+      <p class="rf-author-list">
+        <span class="rf-author"><a href="https://senqiaoyang.com/" target="_blank" rel="noopener">Senqiao Yang<sup>*</sup></a></span>,
+        <span class="rf-author"><a href="https://kcz358.github.io/" target="_blank" rel="noopener">Kaichen Zhang<sup>*</sup></a></span>,
+        <span class="rf-author"><a href="https://scholar.google.com/citations?user=ObkbCWkAAAAJ&amp;hl=zh-CN" target="_blank" rel="noopener">Zhaoyang Jia<sup>*</sup></a></span>,
+        <span class="rf-author"><a href="https://github.com/Jinghao-Guo" target="_blank" rel="noopener">Jinghao Guo<sup>*</sup></a></span>,
+        <span class="rf-author">Yifei Shen<sup>*†</sup></span>,
+        <span class="rf-author"><a href="https://xinjie-q.github.io/" target="_blank" rel="noopener">Xinjie Zhang<sup>*†</sup></a></span>,
+        <span class="rf-author"><a href="https://www.microsoft.com/en-us/research/people/xiaoyizhang/" target="_blank" rel="noopener">Xiaoyi Zhang</a></span>,
+        <span class="rf-author">Haoqing Wang</span>,
+        <span class="rf-author"><a href="https://pableeto.github.io/" target="_blank" rel="noopener">Xiao Li</a></span>,
+        <span class="rf-author"><a href="https://scholar.google.com/citations?user=0mwuIw8AAAAJ&amp;hl=en" target="_blank" rel="noopener">Peng Zhang</a></span>,
+        <span class="rf-author">Xiang An</span>,
+        <span class="rf-author">Yin Xie</span>,
+        <span class="rf-author"><a href="https://www.liuzhening.top/" target="_blank" rel="noopener">Zhening Liu</a></span>,
+        <span class="rf-author"><a href="https://www.microsoft.com/en-us/research/people/xunguo/" target="_blank" rel="noopener">Xun Guo</a></span>,
+        <span class="rf-author"><a href="https://www.microsoft.com/en-us/research/people/jiahali/" target="_blank" rel="noopener">Jiahao Li</a></span>,
+        <span class="rf-author">Shicheng Zheng</span>,
+        <span class="rf-author"><a href="https://jingluw.github.io/" target="_blank" rel="noopener">Jinglu Wang</a></span>,
+        <span class="rf-author"><a href="https://zongyuguo.github.io/" target="_blank" rel="noopener">Zongyu Guo</a></span>,
+        <span class="rf-author"><a href="https://www.microsoft.com/en-us/research/people/wenxie/" target="_blank" rel="noopener">Wenxuan Xie</a></span>,
+        <span class="rf-author">Zihan Zheng</span>,
+        <span class="rf-author"><a href="https://loyuxr.github.io/" target="_blank" rel="noopener">Yuxuan Luo</a></span>,
+        <span class="rf-author"><a href="https://www.microsoft.com/en-us/research/people/libin/" target="_blank" rel="noopener">Bin Li</a></span>,
+        <span class="rf-author"><a href="https://www.microsoft.com/en-us/research/people/yanlu/" target="_blank" rel="noopener">Yan Lu</a></span>
+      </p>
+      <p class="rf-author-notes"><sup>*</sup> Equal Contribution. <span aria-hidden="true">·</span> <sup>†</sup> Project Leads (<a href="mailto:yshenaw@connect.ust.hk">yshenaw@connect.ust.hk</a>, <a href="mailto:xinjiezhang@microsoft.com">xinjiezhang@microsoft.com</a>).</p>
     </div>
   </div>
 </section>
@@ -287,13 +358,11 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title is-3 has-text-centered">BibTeX 📚</h2>
-    <pre><code>@techreport{magevl2026,
-  title       = {Mage-VL: A Codec-Native Proactive Streaming
-                 Multimodal Foundation Model},
-  author      = {Microsoft Mage Team},
-  year        = {2026},
-  institution = {Microsoft},
-  url         = {https://github.com/microsoft/Mage}
+    <pre><code>@article{yang2026magevl,
+  title={Mage-VL: A Codec-Native Proactive Streaming Multimodal Foundation Model},
+  author={Yang, Senqiao and Zhang, Kaichen and Jia, Zhaoyang and Guo, Jinghao and Shen, Yifei and Zhang, Xinjie and Zhang, Xiaoyi and Wang, Haoqing and Li, Xiao and Zhang, Peng and An, Xiang and Xie, Yin and Liu, Zhening and Guo, Xun and Li, Jiahao and Zheng, Shicheng and Wang, Jinglu and Guo, Zongyu and Xie, Wenxuan and Zheng, Zihan and Luo, Yuxuan and Li, Bin and Lu, Yan},
+  journal={arXiv preprint arXiv:2608.00000},
+  year={2026}
 }</code></pre>
   </div>
 </section>
