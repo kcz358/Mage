@@ -81,11 +81,12 @@ Both models are compact enough to train, fine-tune, and deploy on modest hardwar
 
 ## 📥 Model Zoo
 
-**Mage-VL** — vision–language (image & video understanding). A single checkpoint bundles the understanding backbone and the proactive streaming gate.
+**Mage-VL** — vision–language (image & video understanding). A single checkpoint bundles the understanding backbone and the proactive streaming gate. We also release the standalone visual encoder, **Mage-ViT** (ViT pre-training only — no VLM joint training).
 
 | Model | Task | Scale | Hugging Face |
 | :--- | :--- | :---: | :--- |
 | `Mage-VL` | image & video understanding **+** proactive streaming gate | 4B | [🤗 microsoft/Mage-VL](https://huggingface.co/microsoft/Mage-VL) |
+| `Mage-ViT` | codec-native visual encoder (ViT pre-training only) | ~0.3B | [🤗 microsoft/Mage-ViT](https://huggingface.co/microsoft/Mage-ViT) |
 
 **Mage-Flow** — generation & editing. Each checkpoint is a self-contained diffusers-style repo (`transformer/` + shared `vae/`, `text_encoder/`, `scheduler/`).
 
