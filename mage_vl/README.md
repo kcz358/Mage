@@ -5,7 +5,7 @@
   <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-Mage--VL-b31b1b" height="22" /></a>
   <a href="https://github.com/microsoft/Mage"><img src="https://img.shields.io/badge/Code-GitHub-181717?logo=github" alt="GitHub" height="22"></a>
   <a href="https://huggingface.co/microsoft/Mage-VL"><img alt="Mage-VL" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--VL-yellow" height="22" /></a>
-  <a href="https://huggingface.co/microsoft/Mage-ViT"><img alt="Mage-ViT" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--ViT-orange" height="22" /></a>
+  <a href="https://huggingface.co/microsoft/Mage-ViT"><img alt="Mage-ViT" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--ViT-yellow" height="22" /></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-green" alt="License: Apache 2.0" height="22"></a>
 </p>
 
