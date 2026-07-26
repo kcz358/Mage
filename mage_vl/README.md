@@ -4,7 +4,8 @@
   <a href="https://microsoft.github.io/Mage"><img alt="Project Page" src="https://img.shields.io/badge/%F0%9F%8C%90-Project%20Page-blue" height="22" /></a>
   <a href="https://github.com/microsoft/Mage/blob/main/assets/mage_vl_tech_report.pdf"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-Mage--VL-b31b1b" height="22" /></a>
   <a href="https://github.com/microsoft/Mage"><img src="https://img.shields.io/badge/Code-GitHub-181717?logo=github" alt="GitHub" height="22"></a>
-  <a href="https://huggingface.co/microsoft/Mage-VL"><img alt="Hugging Face" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--VL-yellow" height="22" /></a>
+  <a href="https://huggingface.co/microsoft/Mage-VL"><img alt="Mage-VL" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--VL-yellow" height="22" /></a>
+  <a href="https://huggingface.co/microsoft/Mage-ViT"><img alt="Mage-ViT" src="https://img.shields.io/badge/%F0%9F%A4%97-Mage--ViT-orange" height="22" /></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-green" alt="License: Apache 2.0" height="22"></a>
 </p>
 
@@ -170,12 +171,16 @@ Beyond the model, the report distills **seven empirical findings** for efficient
 
 ## 🚀 Quick Start
 
-A single checkpoint, `microsoft/Mage-VL`, covers every capability below. Two entry points:
+A single checkpoint, `microsoft/Mage-VL`, covers every capability below.
 
-| Capability | Script | Entry point |
+| Capability | Script | How to run |
 |---|---|---|
-| Image, frames, traditional codec, neural codec | `inference_base.py` | offline and SGLang online |
-| Event-gated continuous video commentary | `inference_streaming.py` | offline |
+| Image understanding | `inference_base.py` | `--mode offline --image` |
+| Frame-sampled video | `inference_base.py` | `--mode offline --video --video-backend frames` |
+| Traditional H.264/HEVC codec video | `inference_base.py` | `--mode offline --video --video-backend codec --codec-engine traditional` |
+| Neural DCVC-RT codec video | `inference_base.py` | `--mode offline --video --video-backend codec --codec-engine neural` |
+| Online image / video (SGLang) | `inference_base.py` | `--mode online … --base-url <server>` |
+| Event-gated streaming commentary | `inference_streaming.py` | offline, causal segment-by-segment |
 
 ### Installation
 
@@ -260,7 +265,23 @@ python mage_vl/inference_base.py \
 
 ### Online inference
 
-Online mode sends an image or sampled video frames to an OpenAI-compatible SGLang server:
+Online mode talks to an OpenAI-compatible SGLang server. **First** build and launch the server with the Mage-VL SGLang branch (building it needs `protobuf-compiler` and a Rust toolchain):
+
+```bash
+sudo apt-get update && sudo apt-get install -y protobuf-compiler
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+  | sh -s -- -y --profile minimal --default-toolchain 1.90.0
+source "$HOME/.cargo/env"
+
+git clone -b feat/mage-vl https://github.com/kcz358/sglang
+cd sglang
+pip install -e 'python[all]'
+python -m sglang.launch_server \
+  --model-path microsoft/Mage-VL \
+  --trust-remote-code
+```
+
+**Then** send an image or sampled video frames to the running server:
 
 ```bash
 pip install openai
@@ -280,22 +301,6 @@ python mage_vl/inference_base.py \
 ```
 
 Use `--model`, `--max-new-tokens`, and `--api-key` to override their defaults.
-
-Serve the checkpoint with the Mage-VL SGLang branch (building it needs `protobuf-compiler` and a Rust toolchain):
-
-```bash
-sudo apt-get update && sudo apt-get install -y protobuf-compiler
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
-  | sh -s -- -y --profile minimal --default-toolchain 1.90.0
-source "$HOME/.cargo/env"
-
-git clone -b feat/mage-vl https://github.com/kcz358/sglang
-cd sglang
-pip install -e 'python[all]'
-python -m sglang.launch_server \
-  --model-path microsoft/Mage-VL \
-  --trust-remote-code
-```
 
 ### Streaming inference
 
