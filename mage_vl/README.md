@@ -73,9 +73,9 @@ Two parts of the pipeline apply an **AI4AI** (AI-for-AI) paradigm: (1) dense rec
 <details>
 <summary><b>Image understanding & spatial intelligence — click to expand</b></summary>
 
-Matched-LLM comparison: Mage-VL and Qwen3-VL-4B share the same 4B Qwen3 backbone and differ only in the visual front-end. `–` = not run. **Bold** = best in row.
+Performance comparison across models. Mage-VL-4B and Qwen3-VL-4B use the same 4B Qwen3 LLM backbone; Phi-4-Multimodal-Instruct (Phi-4-MM, 5.6B) and Phi-4-Reasoning-Vision (Phi-4-R-V, 15B) are reported for reference. `–` = not run. **Bold** = best in row.
 
-| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM (5.6B) | Phi-4-Reasoning-Vision (15B) |
+| Benchmark | Mage-VL-4B | Qwen3-VL-4B | Phi-4-MM-5.6B | Phi-4-R-V-15B |
 | :--- | :---: | :---: | :---: | :---: |
 | *Document understanding* | | | | |
 | DocVQA-val | **95.14** | 94.69 | 92.79 | 76.20 |
@@ -109,9 +109,9 @@ Matched-LLM comparison: Mage-VL and Qwen3-VL-4B share the same 4B Qwen3 backbone
 <details>
 <summary><b>Video understanding & temporal grounding — click to expand</b></summary>
 
-Δ = Mage-VL − Qwen3-VL-4B (same backbone). **Bold** = best in row.
+Δ = Mage-VL-4B − Qwen3-VL-4B. **Bold** = best in row.
 
-| Benchmark | Mage-VL (4B) | Qwen3-VL (4B) | Phi-4-MM | Phi-4-Reasoning-Vision (15B) | Δ |
+| Benchmark | Mage-VL-4B | Qwen3-VL-4B | Phi-4-MM-5.6B | Phi-4-R-V-15B | Δ |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | *Video QA* | | | | | |
 | MV-Bench | 65.1 | **66.7** | 44.9 | 49.2 | −1.6 |
@@ -145,7 +145,7 @@ The lightweight **tc8** codec setting preserves most of these gains at a fractio
 | Model | Real-Time Avg. | Backward Avg. | Overall |
 | :--- | :---: | :---: | :---: |
 | Qwen3-VL-4B (64 frames) | 72.8 | 53.1 | 63.0 |
-| **Mage-VL (4B)** | **79.84** | 48.15 | **64.00** |
+| **Mage-VL-4B** | **79.84** | 48.15 | **64.00** |
 
 **SoccerNet proactive streaming** (StreamMind protocol, codec-native inputs):
 
