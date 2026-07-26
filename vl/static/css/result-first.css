@@ -182,6 +182,7 @@ a { color: inherit; }
 .rf-hf-icon { font-size: 16px; line-height: 1; }
 
 .rf-hero-media { margin-top: clamp(38px, 6vw, 62px); display: grid; grid-template-columns: 1.016fr 1fr; align-items: start; gap: 12px; text-align: left; }
+.rf-hero-media.is-single { grid-template-columns: min(100%, 860px); justify-content: center; }
 .rf-media-card { position: relative; overflow: hidden; min-width: 0; border: 1px solid var(--rf-line); border-radius: var(--rf-radius-lg); background: transparent; box-shadow: var(--rf-shadow); }
 .rf-media-card a { display: block; }
 .rf-media-card img { width: 100%; height: auto; object-fit: initial; background: transparent; transition: transform .3s ease; }
