@@ -195,7 +195,89 @@ A single checkpoint, `microsoft/Mage-VL`, covers every capability below.
 | Online image / video (SGLang) | `inference_base.py` | `--mode online … --base-url <server>` |
 | Event-gated streaming commentary | `inference_streaming.py` | offline, causal segment-by-segment |
 
+### Using 🤗 Transformers directly
+
+Mage-VL ships its modeling, processing, and chat-template code inside the checkpoint, so image and frame-sampled video inference need **no clone and no `mage_vl` install** — only `transformers` and a decoder for video:
+
+```bash
+pip install transformers accelerate torch pillow opencv-python
+```
+
+```python
+import torch
+from PIL import Image
+from transformers import AutoModelForCausalLM, AutoProcessor
+
+model_id = "microsoft/Mage-VL"
+processor = AutoProcessor.from_pretrained(model_id, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id, trust_remote_code=True, torch_dtype="auto", device_map="auto"
+).eval()
+
+messages = [{"role": "user", "content": [
+    {"type": "image"},
+    {"type": "text", "text": "Describe this image in detail."},
+]}]
+text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+inputs = processor(text=[text], images=[Image.open("dog.jpg").convert("RGB")], return_tensors="pt")
+inputs = {k: (v.to(model.device) if hasattr(v, "to") else v) for k, v in inputs.items()}
+inputs["pixel_values"] = inputs["pixel_values"].to(model.dtype)
+
+with torch.inference_mode():
+    output = model.generate(**inputs, max_new_tokens=256, do_sample=False)
+print(processor.tokenizer.decode(
+    output[0, inputs["input_ids"].shape[1]:], skip_special_tokens=True
+).strip())
+```
+
+> The image depicts a dog sitting on a patterned rug. The dog appears to be a
+> medium-sized breed with a thick, fluffy coat. Its fur is primarily white with
+> patches of black and brown. The dog's ears are perked up, and it has a calm and
+> attentive expression. [...]
+
+For video, pass a list of PIL frames as `videos=[frames]` and use `{"type": "video"}` in the message:
+
+```python
+import cv2
+import numpy as np
+from PIL import Image
+
+def sample_video(path, num_frames=32):
+    capture = cv2.VideoCapture(path)
+    total = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    frames = []
+    for index in np.linspace(0, total - 1, min(num_frames, total), dtype=int):
+        capture.set(cv2.CAP_PROP_POS_FRAMES, int(index))
+        ok, frame = capture.read()
+        if ok:
+            frames.append(Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)))
+    capture.release()
+    return frames
+
+messages = [{"role": "user", "content": [
+    {"type": "video"},
+    {"type": "text", "text": "Describe this video."},
+]}]
+text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+inputs = processor(
+    text=[text],
+    videos=[sample_video("soccer-broadcast.mp4", 32)],
+    return_tensors="pt",
+    padding=True,
+)
+```
+
+> The video opens with a man in a black polo shirt, sporting a short haircut,
+> standing in a stadium. He is holding a yellow microphone with the BBC Sport
+> logo on it. The background reveals a large crowd of spectators. [...]
+
+Add `attn_implementation="sdpa"` to `from_pretrained` if `flash-attn` is not installed. Codec-based video (H.264/HEVC, DCVC-RT) and streaming commentary need the extra dependencies below.
+
 ### Installation
+
+Install the repository requirements for codec video, streaming, and the SGLang server path:
 
 ```bash
 pip install -r mage_vl/requirements.txt
